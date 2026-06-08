@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hero — MLBB Codex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #07070c; --bg2: #0e0d14; --panel: #141220; --panel2: #1b1830;
+    --line: rgba(232,201,134,0.14); --gold: #e8c986; --gold-bright: #f7e3a8; --gold-deep: #b8902f;
+    --grad-gold: linear-gradient(135deg, #f7e3a8, #c79a3a 60%, #8a6a1f);
+    --green: #5fd6a0; --red: #e8728a; --blue: #7aa2ff;
+    --text: #ece7df; --muted: #9a917f;
+    --disp: "Cinzel", serif; --body: "Inter", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--body); -webkit-font-smoothing: antialiased; line-height: 1.55; }
+  body::before { content:""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    background: radial-gradient(1000px 600px at 50% -15%, rgba(199,154,58,0.14), transparent 60%), radial-gradient(800px 600px at 100% 10%, rgba(120,90,200,0.07), transparent 55%); }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 22px; }
+  .gold-text { background: var(--grad-gold); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+  header.top { position: sticky; top: 0; z-index: 30; background: rgba(7,7,12,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .top .wrap { display: flex; align-items: center; gap: 16px; height: 64px; }
+  .back { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; font-weight: 600; transition: color .2s; }
+  .back:hover { color: var(--gold); }
+  .top .brand { font-family: var(--disp); font-weight: 700; letter-spacing: 1px; margin-left: auto; font-size: 16px; }
+
+  /* HERO BANNER */
+  .banner { position: relative; margin-top: 20px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); min-height: 280px; display: flex; align-items: flex-end; }
+  .banner .art { position: absolute; inset: 0; background-size: cover; background-position: center 25%; }
+  .banner .scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,7,12,0.2) 0%, rgba(7,7,12,0.55) 55%, rgba(7,7,12,0.96) 100%); }
+  .banner .info { position: relative; padding: 28px 30px; width: 100%; }
+  .banner h1 { font-family: var(--disp); font-weight: 800; font-size: clamp(34px,6vw,60px); letter-spacing: 2px; line-height: 1; }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .tg { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: rgba(20,18,32,0.7); border: 1px solid var(--line); letter-spacing: 0.5px; }
+  .tg.cls { color: var(--gold); border-color: rgba(232,201,134,0.4); }
+  .tg.lane { color: var(--blue); }
+  .meta { display: flex; gap: 26px; margin-top: 16px; flex-wrap: wrap; }
+  .meta .m b { font-family: var(--disp); font-size: 20px; } .meta .m span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; display: block; }
+  .meta .good { color: var(--green); } .meta .bad { color: var(--red); }
+
+  section.blk { margin-top: 40px; }
+  .blk-h { font-family: var(--disp); font-weight: 700; font-size: 22px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+  .blk-h::before { content:""; width: 4px; height: 22px; background: var(--grad-gold); border-radius: 2px; }
+
+  /* stats */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 14px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .stat .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .stat .lbl b { color: var(--gold); font-family: var(--disp); }
+  .stat .track { height: 7px; background: rgba(255,255,255,0.07); border-radius: 4px; overflow: hidden; }
+  .stat .fill { height: 100%; background: var(--grad-gold); border-radius: 4px; }
+
+  /* skills */
+  .skill { display: flex; gap: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
+  .skill .ic { width: 58px; height: 58px; border-radius: 12px; border: 1px solid var(--line); object-fit: cover; flex-shrink: 0; background: var(--bg2); }
+  .skill .sh { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+  .skill .sn { font-family: var(--disp); font-weight: 700; font-size: 18px; letter-spacing: 0.5px; }
+  .skill .st { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); border: 1px solid rgba(232,201,134,0.4); border-radius: 6px; padding: 2px 8px; }
+  .skill .atag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid; border-radius: 5px; padding: 2px 7px; }
+  .skill .cd { font-size: 12px; color: var(--muted); }
+  .skill .sd { font-size: 14px; color: #cfc8bb; white-space: pre-line; }
+  .skill .sd span { font-weight: 600; }
+
+  /* counters */
+  .cgrid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  @media (max-width: 720px){ .cgrid { grid-template-columns: 1fr; } }
+  .cbox { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .cbox h4 { font-family: var(--disp); font-weight: 700; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .cbox .d { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+  .cbox.s h4 { color: var(--green); } .cbox.w h4 { color: var(--red); } .cbox.y h4 { color: var(--gold); }
+  .clist { display: flex; gap: 12px; flex-wrap: wrap; }
+  .cc { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 66px; }
+  .cc img { width: 56px; height: 56px; border-radius: 11px; object-fit: cover; border: 1px solid var(--line); transition: transform .18s, border-color .18s; }
+  .cc:hover img { transform: translateY(-3px); border-color: rgba(232,201,134,0.6); }
+  .cc span { font-size: 11px; color: var(--muted); text-align: center; line-height: 1.2; }
+  .cnone { font-size: 13px; color: var(--muted); }
+
+  /* build */
+  .build { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .build .brow { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-start; }
+  .build .seg .t { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .build .pill { display: flex; align-items: center; gap: 10px; }
+  .build .pill img { width: 46px; height: 46px; border-radius: 10px; border: 1px solid var(--line); object-fit: cover; }
+  .build .pill .nm { font-size: 13px; font-weight: 600; }
+  .items { display: flex; gap: 10px; flex-wrap: wrap; }
+  .it { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 64px; }
+  .it img { width: 50px; height: 50px; border-radius: 10px; border: 1px solid var(--line); object-fit: cover; }
+  .it span { font-size: 10px; color: var(--muted); text-align: center; line-height: 1.15; }
+  .build .wr { margin-left: auto; text-align: right; }
+  .build .wr b { font-family: var(--disp); font-size: 26px; color: var(--green); } .build .wr span { font-size: 11px; color: var(--muted); display: block; text-transform: uppercase; letter-spacing: 1px; }
+
+  .story { color: var(--muted); font-size: 15px; font-style: italic; max-width: 720px; }
+  .loading, .errbox { text-align: center; color: var(--muted); padding: 80px 0; }
+  footer { border-top: 1px solid var(--line); padding: 26px 0 44px; margin-top: 50px; color: var(--muted); font-size: 12px; text-align: center; }
+  footer a { color: var(--gold); }
+</style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a class="back" href="./index.html">‹ All heroes</a>
+      <div class="brand gold-text">MLBB CODEX</div>
+    </div>
+  </header>
+
+  <div class="wrap" id="root"><div class="loading">Loading hero…</div></div>
+
+  <footer>Data: open MLBB API &amp; Moonton · made by <a href="https://caliskel.github.io" target="_blank" rel="noopener">caliskel</a></footer>
+
+  <script src="./data/heroes.js"></script>
+  <script>
+    const ROSTER = (window.MLBB_HEROES || []);
+    const byId = {}; ROSTER.forEach(h => byId[h.id] = h);
+    const ROLE_EN = { "Exp Lane":"EXP","Gold Lane":"GOLD","Jungle":"JUNGLE","Mid Lane":"MID","Roam":"ROAM" };
+    const STAT_LABELS = ["Durability","Offense","Ability Effects","Difficulty"];
+    const id = +(new URLSearchParams(location.search).get("id"));
+    const root = document.getElementById("root");
+
+    function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+    function wrCls(w){ return w==null?"":(w>=50?"good":"bad"); }
+    function pct(v){ return v==null?"—":v.toFixed(1)+"%"; }
+
+    function counters(ids){
+      const valid=(ids||[]).filter(i=>i&&byId[i]);
+      if(!valid.length) return '<div class="cnone">no data</div>';
+      return '<div class="clist">'+valid.map(i=>{const h=byId[i];
+        return '<a class="cc" href="./hero.html?id='+i+'"><img loading="lazy" src="'+h.img+'"/><span>'+esc(h.name)+'</span></a>';}).join('')+'</div>';
+    }
+
+    function render(d){
+      const r = byId[id] || {};
+      const name = d.name || r.name || "Hero";
+      document.title = name + " — MLBB Codex";
+      const cls = (d.cls||[]).map(c=>'<span class="tg cls">'+esc(c)+'</span>').join('');
+      const lanes = (d.lanes&&d.lanes.length?d.lanes:(r.roles||[]).map(x=>ROLE_EN[x]||x)).map(l=>'<span class="tg lane">'+esc(l)+'</span>').join('');
+      const spec = (d.specialty||[]).map(s=>'<span class="tg">'+esc(s)+'</span>').join('');
+
+      const meta = '<div class="meta">' +
+        (r.win!=null?'<div class="m"><b class="'+wrCls(r.win)+'">'+pct(r.win)+'</b><span>Win rate</span></div>':'') +
+        (r.ban!=null?'<div class="m"><b>'+pct(r.ban)+'</b><span>Ban rate</span></div>':'') +
+        (r.pick!=null?'<div class="m"><b>'+pct(r.pick)+'</b><span>Pick rate</span></div>':'') +
+        (d.difficulty?'<div class="m"><b>'+d.difficulty+'</b><span>Difficulty</span></div>':'') + '</div>';
+
+      const stats = (d.stats&&d.stats.length)? '<section class="blk"><div class="blk-h">Attributes</div><div class="stats">' +
+        d.stats.map((v,i)=>{const val=Math.max(0,Math.min(100,parseInt(v)||0));
+          return '<div class="stat"><div class="lbl">'+(STAT_LABELS[i]||('Stat '+(i+1)))+'<b>'+val+'</b></div><div class="track"><div class="fill" style="width:'+val+'%"></div></div></div>';}).join('') +
+        '</div></section>' : '';
+
+      const slot = (i,n)=> i===0?"Passive":(i===n-1?"Ultimate":"Skill "+i);
+      const abilityTags = (tag)=> Array.isArray(tag)? tag.filter(t=>t&&t.tagname).map(t=>'<span class="atag" style="color:rgb('+(t.tagrgb||"154,145,127")+');border-color:rgba('+(t.tagrgb||"154,145,127")+',0.4)">'+esc(t.tagname)+'</span>').join('') : '';
+      const skills = (d.skills&&d.skills.length)? '<section class="blk"><div class="blk-h">Skills</div>' +
+        d.skills.map((s,i,arr)=>'<div class="skill">'+(s.icon?'<img class="ic" src="'+s.icon+'"/>':'<div class="ic"></div>')+
+          '<div style="flex:1"><div class="sh"><span class="sn">'+esc(s.name)+'</span><span class="st">'+slot(i,arr.length)+'</span>'+abilityTags(s.tag)+(s.cdcost?'<span class="cd">'+esc(s.cdcost)+'</span>':'')+'</div><div class="sd">'+(s.desc||'')+'</div></div></div>').join('') +
+        '</section>' : '';
+
+      const ctr = '<section class="blk"><div class="blk-h">Strong / Weak / Synergy</div><div class="cgrid">' +
+        '<div class="cbox s"><h4>Strong against</h4><div class="d">'+name+' beats these heroes</div>'+counters(r.strong)+'</div>' +
+        '<div class="cbox w"><h4>Countered by</h4><div class="d">Pick these against '+name+'</div>'+counters(r.weak)+'</div>' +
+        '<div class="cbox y"><h4>Synergy</h4><div class="d">Pairs well with</div>'+counters(r.assist)+'</div>' +
+        '</div></section>';
+
+      let build='';
+      if(d.build){ const b=d.build;
+        const items=(b.items||[]).filter(x=>x&&x.icon).map(x=>'<div class="it"><img loading="lazy" src="'+x.icon+'"/><span>'+esc(x.name)+'</span></div>').join('');
+        build='<section class="blk"><div class="blk-h">Recommended build</div><div class="build"><div class="brow">' +
+          (b.spell&&b.spell.icon?'<div class="seg"><div class="t">Battle spell</div><div class="pill"><img src="'+b.spell.icon+'"/><span class="nm">'+esc(b.spell.name)+'</span></div></div>':'') +
+          (b.emblem&&b.emblem.icon?'<div class="seg"><div class="t">Emblem</div><div class="pill"><img src="'+b.emblem.icon+'"/><span class="nm">'+esc(b.emblem.name||'Emblem')+'</span></div></div>':'') +
+          (b.winRate?'<div class="wr"><b>'+b.winRate.toFixed(1)+'%</b><span>build win rate</span></div>':'') +
+          '</div>'+(items?'<div class="seg" style="margin-top:20px"><div class="t">Core items</div><div class="items">'+items+'</div></div>':'')+'</div></section>';
+      }
+
+      const story = d.story? '<section class="blk"><div class="blk-h">Lore</div><p class="story">'+esc(d.story)+'</p></section>' : '';
+
+      root.innerHTML =
+        '<div class="banner"><div class="art" style="background-image:url(\''+(d.splash||r.img)+'\')"></div><div class="scrim"></div>' +
+          '<div class="info"><h1 class="gold-text">'+esc(name)+'</h1><div class="tags">'+cls+lanes+spec+'</div>'+meta+'</div></div>' +
+        stats + skills + ctr + build + story;
+    }
+
+    if(!id || !byId[id]){ root.innerHTML='<div class="errbox">Hero not found. <a href="./index.html" style="color:var(--gold)">Back to all heroes ›</a></div>'; }
+    else {
+      // basic render from roster first (instant), then enrich with detail
+      render({});
+      fetch('./data/heroes/'+id+'.json').then(r=>r.ok?r.json():null).then(d=>{ if(d) render(d); }).catch(()=>{});
+    }
+  </script>
+</body>
+</html>

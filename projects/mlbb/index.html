@@ -80,7 +80,7 @@
 
   /* GRID */
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; padding-bottom: 60px; }
-  .hero { background: linear-gradient(180deg, var(--panel), var(--bg2)); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; transition: transform .2s, border-color .2s, box-shadow .2s; position: relative; }
+  .hero { display: block; background: linear-gradient(180deg, var(--panel), var(--bg2)); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; transition: transform .2s, border-color .2s, box-shadow .2s; position: relative; color: inherit; }
   .hero::before, .hero::after { content: ""; position: absolute; width: 14px; height: 14px; pointer-events: none; opacity: 0; transition: opacity .2s; z-index: 3; }
   .hero::before { top: 7px; left: 7px; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
   .hero::after { top: 7px; right: 7px; border-top: 2px solid var(--gold); border-right: 2px solid var(--gold); }
@@ -184,11 +184,11 @@
       if (!list.length) { grid.innerHTML = '<div class="empty">No heroes found</div>'; return; }
       grid.innerHTML = list.map(h => {
         const roles = (h.roles || []).map(r => ROLE_EN[r] || r).join(" · ");
-        return '<div class="hero">' +
+        return '<a class="hero" href="./hero.html?id=' + h.id + '">' +
           '<div class="pic"><img loading="lazy" src="' + h.img + '" alt="' + h.name + '" />' +
           (h.win != null ? '<span class="wr ' + wrClass(h.win) + '">' + h.win.toFixed(0) + '%</span>' : '') +
           '<div class="nm">' + h.name + '</div></div>' +
-          '<div class="rl">' + (roles || '—') + '</div></div>';
+          '<div class="rl">' + (roles || '—') + '</div></a>';
       }).join("");
     }
     renderRoles(); render();

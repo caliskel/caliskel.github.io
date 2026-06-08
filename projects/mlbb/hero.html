@@ -87,6 +87,13 @@
   .cc span { font-size: 11px; color: var(--muted); text-align: center; line-height: 1.2; }
   .cnone { font-size: 13px; color: var(--muted); }
 
+  /* skins */
+  .skins { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 14px; }
+  .skin { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; transition: transform .18s, border-color .18s, box-shadow .18s; }
+  .skin:hover { transform: translateY(-4px); border-color: rgba(232,201,134,0.55); box-shadow: 0 14px 30px -14px rgba(0,0,0,0.75); }
+  .skin .sp { aspect-ratio: 3/4; background-size: cover; background-position: center top; background-color: var(--bg2); }
+  .skin .snm { padding: 10px 10px; font-size: 12px; font-weight: 600; text-align: center; color: var(--gold-bright); line-height: 1.25; }
+
   /* build */
   .build { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; margin-bottom: 14px; }
   .build .bhead { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line-soft); }
@@ -144,7 +151,7 @@
       const valid=(ids||[]).filter(i=>i&&byId[i]);
       if(!valid.length) return '<div class="cnone">no data</div>';
       return '<div class="clist">'+valid.map(i=>{const h=byId[i];
-        return '<a class="cc" href="./hero.html?id='+i+'&v=7"><img loading="lazy" src="'+h.img+'"/><span>'+esc(h.name)+'</span></a>';}).join('')+'</div>';
+        return '<a class="cc" href="./hero.html?id='+i+'&v=8"><img loading="lazy" src="'+h.img+'"/><span>'+esc(h.name)+'</span></a>';}).join('')+'</div>';
     }
 
     function render(d){
@@ -201,12 +208,16 @@
 
       const story = d.story? '<section class="blk"><div class="blk-h">Lore</div><p class="story">'+esc(d.story)+'</p></section>' : '';
 
+      const skins = (d.skins && d.skins.length) ? '<section class="blk"><div class="blk-h">Skins · '+d.skins.length+'</div><div class="skins">' +
+        d.skins.filter(s=>s&&s.img).map(s=>'<div class="skin"><div class="sp" style="background-image:url(\''+s.img+'\')"></div><div class="snm">'+esc(s.name||'Skin')+'</div></div>').join('') +
+        '</div></section>' : '';
+
       root.innerHTML =
         '<div class="banner"><div class="art" style="background-image:url(\''+(d.splash||r.img)+'\')"></div>' +
           '<div class="portrait" style="background-image:url(\''+(d.splash||r.img)+'\')"></div>' +
           '<div class="scrim"></div>' +
           '<div class="info"><div class="info-txt"><h1 class="gold-text">'+esc(name)+'</h1><div class="tags">'+cls+lanes+spec+'</div>'+meta+'</div></div></div>' +
-        stats + skills + ctr + build + story;
+        stats + skins + skills + ctr + build + story;
     }
 
     if(!id || !byId[id]){ root.innerHTML='<div class="errbox">Hero not found. <a href="./index.html" style="color:var(--gold)">Back to all heroes ›</a></div>'; }

@@ -6,7 +6,6 @@
 <title>caliskel — vibe developer</title>
 <meta name="description" content="caliskel — I build MVPs, web apps, landing pages and bots. Fast, clean, deployed. Days, not months." />
 <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-<!-- Open Graph / Twitter -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://caliskel.github.io" />
 <meta property="og:title" content="caliskel — vibe developer" />
@@ -32,14 +31,12 @@
     --maxw: 1080px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
   body {
     background: var(--bg); color: var(--text);
     font-family: var(--font-display); line-height: 1.6;
     -webkit-font-smoothing: antialiased; overflow-x: hidden; position: relative;
   }
 
-  /* interactive layers */
   #stars { position: fixed; inset: 0; z-index: -3; pointer-events: none; }
   .spotlight { position: fixed; inset: 0; z-index: -2; pointer-events: none;
     background: radial-gradient(circle 460px at var(--mx, 50%) var(--my, 30%), rgba(0,229,255,0.08), transparent 62%); }
@@ -47,7 +44,6 @@
     background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(0,229,255,0.05), transparent 60%); }
   .grain { position: fixed; inset: 0; z-index: 9998; pointer-events: none; opacity: 0.045;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-
   .cur-dot { position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none; border-radius: 50%; opacity: 0;
     width: 9px; height: 9px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); mix-blend-mode: screen; }
   body.cursor-on, body.cursor-on a, body.cursor-on button { cursor: none; }
@@ -55,7 +51,6 @@
 
   .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
   .mono { font-family: var(--font-mono); }
-
   .neon { color: var(--cyan); animation: breathe 2.6s ease-in-out infinite; }
   @keyframes breathe {
     0%, 100% { text-shadow: 0 0 6px rgba(0,229,255,0.35), 0 0 16px rgba(0,229,255,0.18); }
@@ -63,24 +58,35 @@
   }
 
   /* NAV */
-  nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px);
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; backdrop-filter: blur(10px);
     background: rgba(7,10,19,0.7); border-bottom: 1px solid rgba(255,255,255,0.07); }
   nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 66px; }
   .logo { font-family: var(--font-display); font-weight: 700; font-size: 22px; letter-spacing: 1px;
-    color: #fff; text-shadow: 0 0 10px rgba(0,229,255,0.45); }
+    color: #fff; text-shadow: 0 0 10px rgba(0,229,255,0.45); text-decoration: none; }
   .logo .dot { color: var(--cyan); }
   .nav-links { display: flex; gap: 24px; align-items: center; }
-  .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color 0.2s, text-shadow 0.2s; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color 0.2s, text-shadow 0.2s; position: relative; }
   .nav-links a:hover { color: var(--cyan); text-shadow: 0 0 10px rgba(0,229,255,0.5); }
+  .nav-links a.on { color: #fff; }
+  .nav-links a.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); border-radius: 2px; }
   .nav-cta { color: var(--cyan) !important; border: 1px solid rgba(0,229,255,0.4); border-radius: 6px; padding: 7px 16px; background: rgba(0,229,255,0.08); font-weight: 600; }
   .nav-cta:hover { background: rgba(0,229,255,0.16); }
+  .nav-cta.on::after { display: none; }
   .lang-toggle { font-family: var(--font-mono); font-size: 12px; font-weight: 700; letter-spacing: 1px; color: var(--muted);
     background: transparent; border: 1px solid rgba(255,255,255,0.14); border-radius: 6px; padding: 6px 10px; cursor: pointer; transition: all .2s; }
   .lang-toggle:hover { color: var(--cyan); border-color: rgba(0,229,255,0.4); }
   @media (max-width: 720px) { .nav-links a:not(.nav-cta):not(.lang-toggle) { display: none; } }
 
-  /* HERO */
-  header { min-height: 92vh; display: flex; align-items: center; padding: 70px 0; position: relative; }
+  /* APP / VIEWS */
+  #app { padding-top: 66px; transition: opacity .22s ease; }
+  #app.swapping { opacity: 0; }
+  .view { display: none; }
+  .view.active { display: block; }
+  .view-pad { min-height: calc(100vh - 66px); padding: 60px 0 80px; display: flex; flex-direction: column; justify-content: center; }
+
+  /* HERO (home view) */
+  #home.view.active { display: flex; }
+  #home { width: 100%; min-height: calc(100vh - 66px); align-items: center; padding: 40px 0; }
   .kicker { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 13px; letter-spacing: 1px; color: rgba(125,211,252,0.8); margin-bottom: 26px; flex-wrap: wrap; }
   .kicker .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); animation: blink 1.6s infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
@@ -103,15 +109,12 @@
   .btn-cyan:hover { background: rgba(0,229,255,0.22); color: #fff; box-shadow: 0 0 26px rgba(0,229,255,0.45); }
   .btn-ghost { background: var(--panel); border-color: rgba(255,255,255,0.12); color: var(--text); }
   .btn-ghost:hover { border-color: rgba(0,229,255,0.4); color: var(--cyan); }
-  .scroll-cue { position: absolute; bottom: 26px; left: 24px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 10px; }
-  .scroll-cue::before { content: ""; width: 30px; height: 1px; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); animation: cue 1.8s ease-in-out infinite; }
-  @keyframes cue { 0%,100%{transform:scaleX(0.4); opacity:.4} 50%{transform:scaleX(1); opacity:1} }
+  .home-foot { margin-top: 54px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
 
-  /* SECTION */
-  section { padding: 80px 0; position: relative; }
-  .sec-head { margin-bottom: 44px; max-width: 640px; position: relative; }
-  .secnum { position: absolute; right: 0; top: -54px; font-family: var(--font-mono); font-weight: 700;
-    font-size: clamp(90px, 16vw, 200px); line-height: 1; color: rgba(0,229,255,0.04); letter-spacing: -6px; pointer-events: none; z-index: -1; }
+  /* SECTION HEADERS */
+  .sec-head { margin-bottom: 40px; max-width: 660px; position: relative; }
+  .secnum { position: absolute; right: 0; top: -50px; font-family: var(--font-mono); font-weight: 700;
+    font-size: clamp(80px, 14vw, 170px); line-height: 1; color: rgba(0,229,255,0.045); letter-spacing: -6px; pointer-events: none; z-index: -1; }
   .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
   .eyebrow b { color: var(--cyan); }
   .sec-head h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5vw, 52px);
@@ -140,8 +143,7 @@
     border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; background: var(--bg-soft); transition: border-color .22s, transform .22s, box-shadow .22s; }
   a.case:hover { border-color: rgba(0,229,255,0.5); transform: translateY(-4px); box-shadow: 0 18px 44px -16px rgba(0,229,255,0.3); }
   a.case.big { grid-column: 1 / -1; }
-  .case .thumb { aspect-ratio: 16/10; position: relative; overflow: hidden;
-    border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .case .thumb { aspect-ratio: 16/10; position: relative; overflow: hidden; border-bottom: 1px solid rgba(255,255,255,0.08); }
   .case .thumb .bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform .5s cubic-bezier(.2,.7,.2,1); }
   a.case:hover .thumb .bg { transform: scale(1.06); }
   a.case.big .thumb { aspect-ratio: 21/8; }
@@ -153,7 +155,7 @@
   .case p { color: var(--muted); font-size: 15px; }
   @media (max-width: 760px) { .cases { grid-template-columns: 1fr; } a.case.big .thumb { aspect-ratio: 16/10; } }
 
-  /* ABOUT + PROCESS */
+  /* ABOUT */
   .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; }
   @media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; gap: 28px; } }
   .about-text p { font-size: 17px; color: var(--text); margin-bottom: 16px; }
@@ -183,17 +185,17 @@
   .contact-box p { color: var(--muted); font-size: 17px; max-width: 480px; margin: 0 auto 32px; position: relative; }
   .contact-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; }
 
-  /* FOOTER */
-  footer { border-top: 1px solid rgba(255,255,255,0.07); padding: 30px 0; margin-top: 24px; }
-  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; color: var(--muted); font-size: 13px; font-family: var(--font-mono); }
+  /* per-view reveal */
+  .rv { opacity: 0; transform: translateY(26px); }
+  .view.active .rv.in { opacity: 1; transform: none; transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0s); }
 
-  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0s); }
-  .reveal.in { opacity: 1; transform: none; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .38s; }
 
   @media (prefers-reduced-motion: reduce) {
-    .neon, .pulse, .scroll-cue::before { animation: none !important; }
-    .reveal { opacity: 1 !important; transform: none !important; }
+    .neon, .pulse { animation: none !important; }
+    .rv { opacity: 1 !important; transform: none !important; }
     .ch { opacity: 1 !important; transform: none !important; }
+    #app { transition: none !important; }
   }
 </style>
 </head>
@@ -207,172 +209,154 @@
   <!-- NAV -->
   <nav>
     <div class="wrap">
-      <div class="logo">caliskel<span class="dot">.</span></div>
+      <a class="logo" href="#home" data-view="home">caliskel<span class="dot">.</span></a>
       <div class="nav-links">
-        <a href="#services" class="i18n" data-en="Services">Услуги</a>
-        <a href="#work" class="i18n" data-en="Work">Кейсы</a>
-        <a href="#about" class="i18n" data-en="About">Обо мне</a>
-        <a href="#stack" class="i18n" data-en="Stack">Стек</a>
-        <a href="#contact" class="nav-cta i18n" data-en="Contact">Связаться</a>
+        <a href="#services" data-view="services" class="i18n" data-en="Services">Услуги</a>
+        <a href="#work" data-view="work" class="i18n" data-en="Work">Кейсы</a>
+        <a href="#about" data-view="about" class="i18n" data-en="About">Обо мне</a>
+        <a href="#stack" data-view="stack" class="i18n" data-en="Stack">Стек</a>
+        <a href="#contact" data-view="contact" class="nav-cta i18n" data-en="Contact">Связаться</a>
         <button class="lang-toggle" id="langToggle" aria-label="Switch language">RU</button>
       </div>
     </div>
   </nav>
 
-  <!-- HERO -->
-  <header>
-    <div class="wrap">
-      <div class="kicker"><span class="pulse"></span> <span id="kicker-text">vibe developer</span> <span class="br">//</span> <span class="i18n" data-en="available for work">открыт для заказов</span></div>
-      <h1 class="hero-title" id="heroTitle"><span class="ln i18n" data-en="I build &lt;em&gt;products&lt;/em&gt;">Делаю <em>продукты</em>,</span><span class="ln i18n" data-en="that just work">которые работают</span></h1>
-      <p class="hero-sub i18n" data-en="I'm &lt;b&gt;caliskel&lt;/b&gt; — I build MVPs, web apps, landing pages and bots. I turn an idea into a working product &lt;b&gt;in days, not months.&lt;/b&gt;">Я <b>caliskel</b> — собираю MVP, веб-приложения, лендинги и ботов. Превращаю идею в рабочий продукт <b>за дни, а не месяцы.</b></p>
-      <div class="cta-row">
-        <a href="#contact" class="btn btn-cyan i18n" data-en="▶ Start a project">▶ Обсудить проект</a>
-        <a href="#work" class="btn btn-ghost i18n" data-en="See my work">Смотреть работы</a>
-      </div>
-    </div>
-    <div class="scroll-cue">scroll</div>
-  </header>
-
-  <!-- SERVICES -->
-  <section id="services">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <span class="secnum">01</span>
-        <div class="eyebrow"><b>//</b> <span class="i18n" data-en="what I do">что я делаю</span></div>
-        <h2 class="i18n" data-en="What I build">Что я собираю</h2>
-        <p class="i18n" data-en="I take on work where speed and outcome matter. Prices are a starting point — final scope is discussed per project.">Беру задачи, где важна скорость и результат. Цены — ориентир для старта, обсуждаются под проект.</p>
-      </div>
-      <div class="grid grid-3">
-        <div class="card svc reveal">
-          <h3 class="i18n" data-en="Startup MVP">MVP для стартапа</h3>
-          <p class="i18n" data-en="A working prototype to validate your idea and show investors or first customers.">Рабочий прототип, чтобы проверить идею и показать инвесторам или первым клиентам.</p>
-          <div class="price">от $300</div>
+  <main id="app">
+    <!-- HOME -->
+    <header class="view active" id="home">
+      <div class="wrap">
+        <div class="kicker"><span class="pulse"></span> <span id="kicker-text">vibe developer</span> <span class="br">//</span> <span class="i18n" data-en="available for work">открыт для заказов</span></div>
+        <h1 class="hero-title" id="heroTitle"><span class="ln i18n" data-en="I build &lt;em&gt;products&lt;/em&gt;">Делаю <em>продукты</em>,</span><span class="ln i18n" data-en="that just work">которые работают</span></h1>
+        <p class="hero-sub i18n" data-en="I'm &lt;b&gt;caliskel&lt;/b&gt; — I build MVPs, web apps, landing pages and bots. I turn an idea into a working product &lt;b&gt;in days, not months.&lt;/b&gt;">Я <b>caliskel</b> — собираю MVP, веб-приложения, лендинги и ботов. Превращаю идею в рабочий продукт <b>за дни, а не месяцы.</b></p>
+        <div class="cta-row">
+          <a href="#contact" data-view="contact" class="btn btn-cyan i18n" data-en="▶ Start a project">▶ Обсудить проект</a>
+          <a href="#work" data-view="work" class="btn btn-ghost i18n" data-en="See my work">Смотреть работы</a>
         </div>
-        <div class="card svc reveal">
-          <h3 class="i18n" data-en="Landing pages &amp; sites">Лендинги и сайты</h3>
-          <p class="i18n" data-en="Fast, beautiful, responsive pages with forms, animation and turn-key deployment.">Быстрые, красивые и адаптивные страницы с формами, анимацией и деплоем под ключ.</p>
-          <div class="price">от $120</div>
-        </div>
-        <div class="card svc reveal">
-          <h3 class="i18n" data-en="Bots &amp; automation">Боты и автоматизации</h3>
-          <p class="i18n" data-en="Telegram bots, integrations, data processing and routine work on autopilot.">Telegram-боты, интеграции, обработка данных и рутинные процессы на автопилоте.</p>
-          <div class="price">от $150</div>
-        </div>
+        <div class="home-foot">© <span id="year"></span> caliskel — vibe developer ✦ made with care</div>
       </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- CASES -->
-  <section id="work">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <span class="secnum">02</span>
-        <div class="eyebrow"><b>//</b> <span class="i18n" data-en="portfolio">портфолио</span></div>
-        <h2 class="i18n" data-en="What I've shipped">Что я уже отгрузил</h2>
-        <p class="i18n" data-en="Live projects you can open and play with right now.">Живые проекты, которые можно открыть и потрогать прямо сейчас.</p>
-      </div>
-      <div class="cases">
-        <a href="https://caliskel.github.io/vectrix/" class="case big reveal" target="_blank" rel="noopener">
-          <div class="thumb"><div class="bg" style="background-image:url('./assets/vectrix.jpg?v=5')"></div><span class="live i18n" data-en="▶ play">▶ играть</span></div>
-          <div class="body">
-            <div class="tags"><span class="tag">TypeScript</span><span class="tag">Canvas</span><span class="tag">Vite</span></div>
-            <h3>VECTRIX — vector odyssey</h3>
-            <p class="i18n" data-en="My game, built from scratch: gameplay, physics, sound, level editor. A browser arcade in TypeScript and Canvas — no game engines.">Моя игра, собранная с нуля: геймплей, физика, звук, редактор уровней. Браузерная аркада на TypeScript и Canvas — без игровых движков.</p>
+    <!-- SERVICES -->
+    <section class="view" id="services">
+      <div class="wrap view-pad">
+        <div>
+          <div class="sec-head">
+            <span class="secnum">01</span>
+            <div class="eyebrow"><b>//</b> <span class="i18n" data-en="what I do">что я делаю</span></div>
+            <h2 class="i18n" data-en="What I build">Что я собираю</h2>
+            <p class="i18n" data-en="I take on work where speed and outcome matter. Prices are a starting point — final scope is discussed per project.">Беру задачи, где важна скорость и результат. Цены — ориентир для старта, обсуждаются под проект.</p>
           </div>
-        </a>
-        <a href="https://caliskel.github.io/projects/settle/" class="case reveal" target="_blank" rel="noopener">
-          <div class="thumb"><div class="bg" style="background-image:url('./assets/settle.jpg?v=3'); background-position:top center"></div><span class="live i18n" data-en="▶ open">▶ открыть</span></div>
-          <div class="body">
-            <div class="tags"><span class="tag">Landing</span><span class="tag">HTML/CSS</span><span class="tag">Responsive</span></div>
-            <h3 class="i18n" data-en="Settle — SaaS landing">Settle — лендинг SaaS</h3>
-            <p class="i18n" data-en="A conversion landing for an invoicing service: hero, features, pricing, testimonials, FAQ. Responsive, horizontal-scroll layout.">Конверсионная посадочная для сервиса счетов: герой, фичи, тарифы, отзывы, FAQ. Адаптив и плавные анимации.</p>
-          </div>
-        </a>
-        <a href="https://caliskel.github.io/projects/flow/" class="case reveal" target="_blank" rel="noopener">
-          <div class="thumb"><div class="bg" style="background-image:url('./assets/flow.jpg?v=1'); background-position:top center"></div><span class="live i18n" data-en="▶ open">▶ открыть</span></div>
-          <div class="body">
-            <div class="tags"><span class="tag">Web App</span><span class="tag">Drag &amp; Drop</span><span class="tag">JS</span></div>
-            <h3 class="i18n" data-en="Flow — kanban board">Flow — канбан-доска</h3>
-            <p class="i18n" data-en="A task board with drag-and-drop cards across columns, labels, and auto-save to the browser.">Доска задач с перетаскиванием карточек между колонками, метками и автосохранением в браузере.</p>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT + PROCESS -->
-  <section id="about">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <span class="secnum">03</span>
-        <div class="eyebrow"><b>//</b> <span class="i18n" data-en="about">обо мне</span></div>
-        <h2 class="i18n" data-en="Who you're working with">Кто за этим стоит</h2>
-      </div>
-      <div class="about-grid">
-        <div class="about-text reveal">
-          <p class="i18n" data-en="I'm &lt;b&gt;caliskel&lt;/b&gt;, an independent developer. I take an idea and turn it into a working product in the browser — code, design and deployment, all done by me.">Я <b>caliskel</b>, независимый разработчик. Беру идею и довожу её до работающего продукта в браузере — код, дизайн и деплой делаю сам.</p>
-          <p class="i18n" data-en="I care about speed and a clean result. No bloated teams, no months of waiting — just a product that works, shipped fast.">Ценю скорость и чистый результат. Без раздутых команд и месяцев ожидания — просто рабочий продукт, собранный быстро.</p>
-          <div class="about-stats">
-            <div class="s"><div class="b">3–7</div><div class="l i18n" data-en="days to an MVP">дней до MVP</div></div>
-            <div class="s"><div class="b">100%</div><div class="l i18n" data-en="hands-on, just me">всё сам</div></div>
-            <div class="s"><div class="b">∞</div><div class="l i18n" data-en="revisions to the result">правок до результата</div></div>
+          <div class="grid grid-3">
+            <div class="card svc rv"><h3 class="i18n" data-en="Startup MVP">MVP для стартапа</h3><p class="i18n" data-en="A working prototype to validate your idea and show investors or first customers.">Рабочий прототип, чтобы проверить идею и показать инвесторам или первым клиентам.</p><div class="price">от $300</div></div>
+            <div class="card svc rv"><h3 class="i18n" data-en="Landing pages &amp; sites">Лендинги и сайты</h3><p class="i18n" data-en="Fast, beautiful, responsive pages with forms, animation and turn-key deployment.">Быстрые, красивые и адаптивные страницы с формами, анимацией и деплоем под ключ.</p><div class="price">от $120</div></div>
+            <div class="card svc rv"><h3 class="i18n" data-en="Bots &amp; automation">Боты и автоматизации</h3><p class="i18n" data-en="Telegram bots, integrations, data processing and routine work on autopilot.">Telegram-боты, интеграции, обработка данных и рутинные процессы на автопилоте.</p><div class="price">от $150</div></div>
           </div>
         </div>
-        <div class="steps reveal">
-          <div class="step"><div class="n">01</div><div><h4 class="i18n" data-en="Discuss">Обсуждаем</h4><p class="i18n" data-en="Tell me the task — I'll say honestly what's realistic and what it costs.">Расскажи задачу — отвечу честно, что реально и за сколько.</p></div></div>
-          <div class="step"><div class="n">02</div><div><h4 class="i18n" data-en="Build">Собираю</h4><p class="i18n" data-en="I build fast, show progress, and iterate until it's right.">Делаю быстро, показываю прогресс и правлю до результата.</p></div></div>
-          <div class="step"><div class="n">03</div><div><h4 class="i18n" data-en="Ship">Отгружаю</h4><p class="i18n" data-en="I deploy and hand you a working link. Support after delivery.">Деплою и отдаю рабочую ссылку. Поддержка после сдачи.</p></div></div>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section class="view" id="work">
+      <div class="wrap view-pad">
+        <div>
+          <div class="sec-head">
+            <span class="secnum">02</span>
+            <div class="eyebrow"><b>//</b> <span class="i18n" data-en="portfolio">портфолио</span></div>
+            <h2 class="i18n" data-en="What I've shipped">Что я уже отгрузил</h2>
+            <p class="i18n" data-en="Live projects you can open and play with right now.">Живые проекты, которые можно открыть и потрогать прямо сейчас.</p>
+          </div>
+          <div class="cases">
+            <a href="https://caliskel.github.io/vectrix/" class="case big rv" target="_blank" rel="noopener">
+              <div class="thumb"><div class="bg" style="background-image:url('./assets/vectrix.jpg?v=5')"></div><span class="live i18n" data-en="▶ play">▶ играть</span></div>
+              <div class="body">
+                <div class="tags"><span class="tag">TypeScript</span><span class="tag">Canvas</span><span class="tag">Vite</span></div>
+                <h3>VECTRIX — vector odyssey</h3>
+                <p class="i18n" data-en="My game, built from scratch: gameplay, physics, sound, level editor. A browser arcade in TypeScript and Canvas — no game engines.">Моя игра, собранная с нуля: геймплей, физика, звук, редактор уровней. Браузерная аркада на TypeScript и Canvas — без игровых движков.</p>
+              </div>
+            </a>
+            <a href="https://caliskel.github.io/projects/settle/" class="case rv" target="_blank" rel="noopener">
+              <div class="thumb"><div class="bg" style="background-image:url('./assets/settle.jpg?v=3'); background-position:top center"></div><span class="live i18n" data-en="▶ open">▶ открыть</span></div>
+              <div class="body">
+                <div class="tags"><span class="tag">Landing</span><span class="tag">HTML/CSS</span><span class="tag">Responsive</span></div>
+                <h3 class="i18n" data-en="Settle — SaaS landing">Settle — лендинг SaaS</h3>
+                <p class="i18n" data-en="A conversion landing for an invoicing service: hero, features, pricing, testimonials, FAQ. Responsive, horizontal-scroll layout.">Конверсионная посадочная для сервиса счетов: герой, фичи, тарифы, отзывы, FAQ. Адаптив и плавные анимации.</p>
+              </div>
+            </a>
+            <a href="https://caliskel.github.io/projects/flow/" class="case rv" target="_blank" rel="noopener">
+              <div class="thumb"><div class="bg" style="background-image:url('./assets/flow.jpg?v=1'); background-position:top center"></div><span class="live i18n" data-en="▶ open">▶ открыть</span></div>
+              <div class="body">
+                <div class="tags"><span class="tag">Web App</span><span class="tag">Drag &amp; Drop</span><span class="tag">JS</span></div>
+                <h3 class="i18n" data-en="Flow — kanban board">Flow — канбан-доска</h3>
+                <p class="i18n" data-en="A task board with drag-and-drop cards across columns, labels, and auto-save to the browser.">Доска задач с перетаскиванием карточек между колонками, метками и автосохранением в браузере.</p>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- STACK -->
-  <section id="stack">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <span class="secnum">04</span>
-        <div class="eyebrow"><b>//</b> <span class="i18n" data-en="tools">инструменты</span></div>
-        <h2 class="i18n" data-en="What I use">Чем я это делаю</h2>
-        <p class="i18n" data-en="A modern toolkit for fast builds and reliable deployment.">Современный набор для быстрой сборки и надёжного деплоя.</p>
-      </div>
-      <div class="chips reveal">
-        <span class="chip">Next.js</span>
-        <span class="chip">React</span>
-        <span class="chip">TypeScript</span>
-        <span class="chip">Tailwind CSS</span>
-        <span class="chip">Supabase</span>
-        <span class="chip">PostgreSQL</span>
-        <span class="chip">Node.js</span>
-        <span class="chip">REST API</span>
-        <span class="chip">Telegram Bot API</span>
-        <span class="chip">Vercel</span>
-        <span class="chip">Stripe</span>
-        <span class="chip">Figma</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="wrap">
-      <div class="contact-box reveal" id="contactBox">
-        <h2 class="i18n" data-en="Got an idea? &lt;span class=&quot;neon&quot;&gt;Let's build it.&lt;/span&gt;">Есть идея? <span class="neon">Давай соберём.</span></h2>
-        <p class="i18n" data-en="Describe the task in a couple of lines — I'll reply fast and tell you honestly what's doable and the cost.">Опиши задачу в двух словах — отвечу быстро и честно скажу, что и за сколько реально сделать.</p>
-        <div class="contact-links">
-          <a href="https://t.me/caliskel" class="btn btn-cyan" target="_blank" rel="noopener">▶ Telegram</a>
-          <a href="https://x.com/CalisKel" class="btn btn-ghost" target="_blank" rel="noopener">X (Twitter)</a>
+    <!-- ABOUT -->
+    <section class="view" id="about">
+      <div class="wrap view-pad">
+        <div>
+          <div class="sec-head">
+            <span class="secnum">03</span>
+            <div class="eyebrow"><b>//</b> <span class="i18n" data-en="about">обо мне</span></div>
+            <h2 class="i18n" data-en="Who you're working with">Кто за этим стоит</h2>
+          </div>
+          <div class="about-grid">
+            <div class="about-text">
+              <p class="i18n" data-en="I'm &lt;b&gt;caliskel&lt;/b&gt;, an independent developer. I take an idea and turn it into a working product in the browser — code, design and deployment, all done by me.">Я <b>caliskel</b>, независимый разработчик. Беру идею и довожу её до работающего продукта в браузере — код, дизайн и деплой делаю сам.</p>
+              <p class="i18n" data-en="I care about speed and a clean result. No bloated teams, no months of waiting — just a product that works, shipped fast.">Ценю скорость и чистый результат. Без раздутых команд и месяцев ожидания — просто рабочий продукт, собранный быстро.</p>
+              <div class="about-stats">
+                <div class="s"><div class="b">3–7</div><div class="l i18n" data-en="days to an MVP">дней до MVP</div></div>
+                <div class="s"><div class="b">100%</div><div class="l i18n" data-en="hands-on, just me">всё сам</div></div>
+                <div class="s"><div class="b">∞</div><div class="l i18n" data-en="revisions to the result">правок до результата</div></div>
+              </div>
+            </div>
+            <div class="steps">
+              <div class="step"><div class="n">01</div><div><h4 class="i18n" data-en="Discuss">Обсуждаем</h4><p class="i18n" data-en="Tell me the task — I'll say honestly what's realistic and what it costs.">Расскажи задачу — отвечу честно, что реально и за сколько.</p></div></div>
+              <div class="step"><div class="n">02</div><div><h4 class="i18n" data-en="Build">Собираю</h4><p class="i18n" data-en="I build fast, show progress, and iterate until it's right.">Делаю быстро, показываю прогресс и правлю до результата.</p></div></div>
+              <div class="step"><div class="n">03</div><div><h4 class="i18n" data-en="Ship">Отгружаю</h4><p class="i18n" data-en="I deploy and hand you a working link. Support after delivery.">Деплою и отдаю рабочую ссылку. Поддержка после сдачи.</p></div></div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <footer>
-    <div class="wrap">
-      <div>© <span id="year"></span> caliskel — vibe developer</div>
-      <div>made with care ✦</div>
-    </div>
-  </footer>
+    <!-- STACK -->
+    <section class="view" id="stack">
+      <div class="wrap view-pad">
+        <div>
+          <div class="sec-head">
+            <span class="secnum">04</span>
+            <div class="eyebrow"><b>//</b> <span class="i18n" data-en="tools">инструменты</span></div>
+            <h2 class="i18n" data-en="What I use">Чем я это делаю</h2>
+            <p class="i18n" data-en="A modern toolkit for fast builds and reliable deployment.">Современный набор для быстрой сборки и надёжного деплоя.</p>
+          </div>
+          <div class="chips">
+            <span class="chip">Next.js</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Tailwind CSS</span>
+            <span class="chip">Supabase</span><span class="chip">PostgreSQL</span><span class="chip">Node.js</span><span class="chip">REST API</span>
+            <span class="chip">Telegram Bot API</span><span class="chip">Vercel</span><span class="chip">Stripe</span><span class="chip">Figma</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="view" id="contact">
+      <div class="wrap view-pad">
+        <div class="contact-box" id="contactBox">
+          <h2 class="i18n" data-en="Got an idea? &lt;span class=&quot;neon&quot;&gt;Let's build it.&lt;/span&gt;">Есть идея? <span class="neon">Давай соберём.</span></h2>
+          <p class="i18n" data-en="Describe the task in a couple of lines — I'll reply fast and tell you honestly what's doable and the cost.">Опиши задачу в двух словах — отвечу быстро и честно скажу, что и за сколько реально сделать.</p>
+          <div class="contact-links">
+            <a href="https://t.me/caliskel" class="btn btn-cyan" target="_blank" rel="noopener">▶ Telegram</a>
+            <a href="https://x.com/CalisKel" class="btn btn-ghost" target="_blank" rel="noopener">X (Twitter)</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <script>
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -381,52 +365,33 @@
 
     /* ---------- constellation canvas ---------- */
     (function () {
-      const cv = document.getElementById("stars");
-      const ctx = cv.getContext("2d");
-      let w, h, dpr, pts = [];
-      const mouse = { x: -9999, y: -9999 };
+      const cv = document.getElementById("stars"), ctx = cv.getContext("2d");
+      let w, h, dpr, pts = []; const mouse = { x: -9999, y: -9999 };
       function resize() {
         dpr = Math.min(window.devicePixelRatio || 1, 2);
         w = cv.width = innerWidth * dpr; h = cv.height = innerHeight * dpr;
         cv.style.width = innerWidth + "px"; cv.style.height = innerHeight + "px";
         const count = Math.min(80, Math.floor((innerWidth * innerHeight) / 18000));
-        pts = Array.from({ length: count }, () => ({
-          x: Math.random() * w, y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.18 * dpr, vy: (Math.random() - 0.5) * 0.18 * dpr,
-        }));
+        pts = Array.from({ length: count }, () => ({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.18 * dpr, vy: (Math.random() - 0.5) * 0.18 * dpr }));
       }
       const LINK = 130, MOUSE_R = 170;
       function frame() {
-        ctx.clearRect(0, 0, w, h);
-        const mx = mouse.x * dpr, my = mouse.y * dpr;
+        ctx.clearRect(0, 0, w, h); const mx = mouse.x * dpr, my = mouse.y * dpr;
         for (const p of pts) {
           p.x += p.vx; p.y += p.vy;
-          if (p.x < 0 || p.x > w) p.vx *= -1;
-          if (p.y < 0 || p.y > h) p.vy *= -1;
+          if (p.x < 0 || p.x > w) p.vx *= -1; if (p.y < 0 || p.y > h) p.vy *= -1;
           const dmx = p.x - mx, dmy = p.y - my, dm = Math.hypot(dmx, dmy);
-          if (dm < MOUSE_R * dpr && dm > 0) {
-            const f = (1 - dm / (MOUSE_R * dpr)) * 0.6;
-            p.x += (dmx / dm) * f; p.y += (dmy / dm) * f;
-          }
+          if (dm < MOUSE_R * dpr && dm > 0) { const f = (1 - dm / (MOUSE_R * dpr)) * 0.6; p.x += (dmx / dm) * f; p.y += (dmy / dm) * f; }
         }
         for (let i = 0; i < pts.length; i++) {
           const a = pts[i];
           for (let j = i + 1; j < pts.length; j++) {
-            const b = pts[j];
-            const d = Math.hypot(a.x - b.x, a.y - b.y);
-            if (d < LINK * dpr) {
-              ctx.strokeStyle = "rgba(0,229,255," + (0.16 * (1 - d / (LINK * dpr))).toFixed(3) + ")";
-              ctx.lineWidth = dpr;
-              ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-            }
+            const b = pts[j]; const d = Math.hypot(a.x - b.x, a.y - b.y);
+            if (d < LINK * dpr) { ctx.strokeStyle = "rgba(0,229,255," + (0.16 * (1 - d / (LINK * dpr))).toFixed(3) + ")"; ctx.lineWidth = dpr; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
           }
           const dmm = Math.hypot(a.x - mx, a.y - my);
-          if (dmm < MOUSE_R * dpr) {
-            ctx.strokeStyle = "rgba(0,229,255," + (0.3 * (1 - dmm / (MOUSE_R * dpr))).toFixed(3) + ")";
-            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mx, my); ctx.stroke();
-          }
-          ctx.fillStyle = "rgba(0,229,255,0.55)";
-          ctx.beginPath(); ctx.arc(a.x, a.y, 1.3 * dpr, 0, 6.28); ctx.fill();
+          if (dmm < MOUSE_R * dpr) { ctx.strokeStyle = "rgba(0,229,255," + (0.3 * (1 - dmm / (MOUSE_R * dpr))).toFixed(3) + ")"; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mx, my); ctx.stroke(); }
+          ctx.fillStyle = "rgba(0,229,255,0.55)"; ctx.beginPath(); ctx.arc(a.x, a.y, 1.3 * dpr, 0, 6.28); ctx.fill();
         }
         requestAnimationFrame(frame);
       }
@@ -435,7 +400,7 @@
       if (!reduceMotion) frame();
     })();
 
-    /* ---------- spotlight + card glow follow ---------- */
+    /* ---------- spotlight + card glow ---------- */
     addEventListener("mousemove", (e) => {
       document.documentElement.style.setProperty("--mx", e.clientX + "px");
       document.documentElement.style.setProperty("--my", e.clientY + "px");
@@ -443,79 +408,80 @@
     document.querySelectorAll(".card, #contactBox").forEach((el) => {
       el.addEventListener("mousemove", (e) => {
         const r = el.getBoundingClientRect();
-        el.style.setProperty("--cx", (e.clientX - r.left) + "px");
-        el.style.setProperty("--cy", (e.clientY - r.top) + "px");
-        el.style.setProperty("--mx", (e.clientX - r.left) + "px");
-        el.style.setProperty("--my", (e.clientY - r.top) + "px");
+        el.style.setProperty("--cx", (e.clientX - r.left) + "px"); el.style.setProperty("--cy", (e.clientY - r.top) + "px");
+        el.style.setProperty("--mx", (e.clientX - r.left) + "px"); el.style.setProperty("--my", (e.clientY - r.top) + "px");
       });
     });
 
-    /* ---------- custom cursor (neon dot) ---------- */
+    /* ---------- custom cursor ---------- */
     if (finePointer && !reduceMotion) {
       document.body.classList.add("cursor-on");
       const dot = document.querySelector(".cur-dot");
-      addEventListener("mousemove", (e) => {
-        dot.style.transform = "translate(" + (e.clientX - 4.5) + "px," + (e.clientY - 4.5) + "px)";
-        dot.style.opacity = 1;
-      });
+      addEventListener("mousemove", (e) => { dot.style.transform = "translate(" + (e.clientX - 4.5) + "px," + (e.clientY - 4.5) + "px)"; dot.style.opacity = 1; });
     }
 
     /* ---------- i18n ---------- */
     const ruMap = new Map();
     document.querySelectorAll(".i18n").forEach((el) => ruMap.set(el, el.innerHTML));
     let heroChars = [];
-    function splitHero() {
+    function buildHero() {
       heroChars = [];
-      const title = document.getElementById("heroTitle");
-      title.querySelectorAll(".ln").forEach((ln) => {
-        const walk = (node) => {
-          [...node.childNodes].forEach((n) => {
-            if (n.nodeType === 3) {
-              const frag = document.createDocumentFragment();
-              [...n.textContent].forEach((c) => {
-                const s = document.createElement("span");
-                s.className = "ch" + (c === " " ? " sp" : "");
-                s.textContent = c === " " ? "" : c;
-                frag.appendChild(s); heroChars.push(s);
-              });
-              node.replaceChild(frag, n);
-            } else if (n.nodeType === 1) { walk(n); }
-          });
-        };
-        walk(ln);
+      document.getElementById("heroTitle").querySelectorAll(".ln").forEach((ln) => {
+        const walk = (node) => { [...node.childNodes].forEach((n) => {
+          if (n.nodeType === 3) { const frag = document.createDocumentFragment();
+            [...n.textContent].forEach((c) => { const s = document.createElement("span"); s.className = "ch" + (c === " " ? " sp" : ""); s.textContent = c === " " ? "" : c; frag.appendChild(s); heroChars.push(s); });
+            node.replaceChild(frag, n);
+          } else if (n.nodeType === 1) { walk(n); } });
+        }; walk(ln);
       });
-      if (!reduceMotion) {
-        heroChars.forEach((c, i) => {
-          c.style.opacity = 0; c.style.transform = "translateY(40px) rotateX(-40deg)";
-          c.style.transition = "opacity .6s ease, transform .6s cubic-bezier(.2,.8,.2,1)";
-          c.style.transitionDelay = (i * 0.025 + 0.05) + "s";
-        });
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          heroChars.forEach((c) => { c.style.opacity = 1; c.style.transform = "none"; });
-        }));
-      }
+    }
+    function animateHero() {
+      if (reduceMotion) return;
+      heroChars.forEach((c, i) => { c.style.opacity = 0; c.style.transform = "translateY(40px) rotateX(-40deg)"; c.style.transition = "opacity .6s ease, transform .6s cubic-bezier(.2,.8,.2,1)"; c.style.transitionDelay = (i * 0.025 + 0.05) + "s"; });
+      requestAnimationFrame(() => requestAnimationFrame(() => { heroChars.forEach((c) => { c.style.opacity = 1; c.style.transform = "none"; }); }));
     }
     function applyLang(lang) {
       document.documentElement.lang = lang;
-      document.querySelectorAll(".i18n").forEach((el) => {
-        el.innerHTML = lang === "en" ? el.getAttribute("data-en") : ruMap.get(el);
-      });
+      document.querySelectorAll(".i18n").forEach((el) => { el.innerHTML = lang === "en" ? el.getAttribute("data-en") : ruMap.get(el); });
       document.getElementById("langToggle").textContent = lang === "en" ? "RU" : "EN";
       try { localStorage.setItem("lang", lang); } catch (e) {}
-      splitHero();
+      buildHero(); if (current === "home") animateHero();
     }
-    let lang = "en";
-    try { lang = localStorage.getItem("lang") || "en"; } catch (e) {}
-    applyLang(lang);
-    document.getElementById("langToggle").addEventListener("click", () => {
-      lang = lang === "en" ? "ru" : "en"; applyLang(lang);
-    });
 
-    /* ---------- kinetic hero weight on mouse ---------- */
+    /* ---------- view switching ---------- */
+    const views = [...document.querySelectorAll(".view")];
+    const navItems = [...document.querySelectorAll("[data-view]")];
+    let current = "home";
+    function triggerReveals(id) {
+      const rvs = [...document.getElementById(id).querySelectorAll(".rv")];
+      rvs.forEach((el, i) => { el.classList.remove("in"); el.style.setProperty("--d", (i * 0.08) + "s"); });
+      requestAnimationFrame(() => requestAnimationFrame(() => rvs.forEach((el) => el.classList.add("in"))));
+    }
+    function updateNav() {
+      document.querySelectorAll(".nav-links a[data-view]").forEach((a) => a.classList.toggle("on", a.dataset.view === current && current !== "home"));
+    }
+    function swapNow(id) {
+      views.forEach((v) => v.classList.toggle("active", v.id === id));
+      current = id; window.scrollTo(0, 0); updateNav();
+      if (id === "home") animateHero(); else triggerReveals(id);
+    }
+    function navTo(id) {
+      if (id === current || !document.getElementById(id)) return;
+      if (document.startViewTransition && !reduceMotion) {
+        document.startViewTransition(() => swapNow(id));
+      } else {
+        const app = document.getElementById("app");
+        app.classList.add("swapping");
+        setTimeout(() => { swapNow(id); app.classList.remove("swapping"); }, 200);
+      }
+    }
+    navItems.forEach((el) => el.addEventListener("click", (e) => { e.preventDefault(); navTo(el.dataset.view); }));
+
+    /* ---------- kinetic hero weight ---------- */
     if (finePointer && !reduceMotion) {
       addEventListener("mousemove", (e) => {
-        heroChars.forEach((c) => {
-          if (!c.textContent) return;
+        if (current !== "home") return;
+        heroChars.forEach((c) => { if (!c.textContent) return;
           const r = c.getBoundingClientRect();
           const d = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
           const f = Math.max(0, 1 - d / 220);
@@ -525,35 +491,24 @@
       });
     }
 
-    /* ---------- scramble decode kicker ---------- */
+    /* ---------- scramble kicker ---------- */
     (function () {
       if (reduceMotion) return;
-      const el = document.getElementById("kicker-text");
-      const final = el.textContent;
-      const charset = "!<>-_\\/[]{}=+*^?#01abcdef";
-      let frame = 0;
+      const el = document.getElementById("kicker-text"); const final = el.textContent;
+      const charset = "!<>-_\\/[]{}=+*^?#01abcdef"; let frame = 0;
       const queue = [...final].map((c, i) => ({ c, start: i * 2 + 4, end: i * 2 + 16 }));
-      function run() {
-        let out = "", done = 0;
-        queue.forEach((q) => {
-          if (frame >= q.end) { out += q.c; done++; }
-          else if (frame >= q.start) { out += charset[Math.floor(Math.random() * charset.length)]; }
-        });
-        el.textContent = out;
-        if (done < queue.length) { frame++; requestAnimationFrame(run); }
-        else el.textContent = final;
-      }
-      run();
+      (function run() { let out = "", done = 0;
+        queue.forEach((q) => { if (frame >= q.end) { out += q.c; done++; } else if (frame >= q.start) { out += charset[Math.floor(Math.random() * charset.length)]; } });
+        el.textContent = out; if (done < queue.length) { frame++; requestAnimationFrame(run); } else el.textContent = final;
+      })();
     })();
 
-    /* ---------- scroll reveals (stagger) ---------- */
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    document.querySelectorAll(".grid-3, .cases").forEach((grid) => {
-      [...grid.children].forEach((ch, i) => { if (ch.classList.contains("reveal")) ch.style.setProperty("--d", (i * 0.09) + "s"); });
-    });
-    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+    /* ---------- init ---------- */
+    let lang = "en"; try { lang = localStorage.getItem("lang") || "en"; } catch (e) {}
+    applyLang(lang);
+    document.getElementById("langToggle").addEventListener("click", () => { lang = lang === "en" ? "ru" : "en"; applyLang(lang); });
+    const hashId = (location.hash || "").replace("#", "");
+    if (hashId && document.getElementById(hashId) && hashId !== "home") swapNow(hashId); else animateHero();
   </script>
 </body>
 </html>

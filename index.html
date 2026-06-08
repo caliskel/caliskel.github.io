@@ -38,12 +38,10 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
   /* custom cursor (desktop only) */
-  .cur-dot, .cur-ring { position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none; transform: translate(-50%,-50%); border-radius: 50%; opacity: 0; }
-  .cur-dot { width: 7px; height: 7px; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); mix-blend-mode: screen; }
-  .cur-ring { width: 32px; height: 32px; border: 1px solid rgba(0,229,255,0.55); transition: width .2s, height .2s, background .2s, border-color .2s; }
-  .cur-ring.hov { width: 54px; height: 54px; background: rgba(0,229,255,0.08); border-color: var(--cyan); }
+  .cur-dot { position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none; border-radius: 50%; opacity: 0;
+    width: 9px; height: 9px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); mix-blend-mode: screen; }
   body.cursor-on, body.cursor-on a, body.cursor-on button { cursor: none; }
-  @media (pointer: coarse) { .cur-dot, .cur-ring { display: none; } }
+  @media (pointer: coarse) { .cur-dot { display: none; } }
 
   .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
   .mono { font-family: var(--font-mono); }
@@ -85,7 +83,9 @@
   .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
   .btn { display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
     padding: 15px 28px; border-radius: 8px; text-decoration: none; font-family: var(--font-display);
-    font-weight: 600; font-size: 16px; transition: background .2s, color .2s, box-shadow .2s, border-color .2s; border: 1px solid; will-change: transform; }
+    font-weight: 600; font-size: 16px; transition: background .2s, color .2s, box-shadow .2s, border-color .2s, transform .2s cubic-bezier(.2,.8,.2,1); border: 1px solid; }
+  .btn:hover { transform: scale(1.05); }
+  .btn:active { transform: scale(0.98); }
   .btn-cyan { background: rgba(0,229,255,0.12); border-color: rgba(0,229,255,0.5); color: var(--cyan); }
   .btn-cyan:hover { background: rgba(0,229,255,0.22); color: #fff; box-shadow: 0 0 26px rgba(0,229,255,0.45); }
   .btn-ghost { background: var(--panel); border-color: rgba(255,255,255,0.12); color: var(--text); }
@@ -176,7 +176,6 @@
   <div class="vignette"></div>
   <div class="spotlight"></div>
   <div class="grain"></div>
-  <div class="cur-ring"></div>
   <div class="cur-dot"></div>
 
   <!-- NAV -->
@@ -396,37 +395,13 @@
       });
     });
 
-    /* ---------- custom cursor ---------- */
+    /* ---------- custom cursor (neon dot only) ---------- */
     if (finePointer && !reduceMotion) {
       document.body.classList.add("cursor-on");
-      const dot = document.querySelector(".cur-dot"), ring = document.querySelector(".cur-ring");
-      let rx = innerWidth / 2, ry = innerHeight / 2, tx = rx, ty = ry;
+      const dot = document.querySelector(".cur-dot");
       addEventListener("mousemove", (e) => {
-        tx = e.clientX; ty = e.clientY;
-        dot.style.transform = "translate(" + (tx - 3.5) + "px," + (ty - 3.5) + "px)";
-        dot.style.opacity = ring.style.opacity = 1;
-      });
-      (function loop() {
-        rx += (tx - rx) * 0.18; ry += (ty - ry) * 0.18;
-        ring.style.transform = "translate(" + (rx - 16) + "px," + (ry - 16) + "px)";
-        requestAnimationFrame(loop);
-      })();
-      document.querySelectorAll("a, button, .case, .card, .chip").forEach((el) => {
-        el.addEventListener("mouseenter", () => ring.classList.add("hov"));
-        el.addEventListener("mouseleave", () => ring.classList.remove("hov"));
-      });
-    }
-
-    /* ---------- magnetic buttons ---------- */
-    if (finePointer && !reduceMotion) {
-      document.querySelectorAll("[data-magnetic]").forEach((el) => {
-        el.addEventListener("mousemove", (e) => {
-          const r = el.getBoundingClientRect();
-          const dx = e.clientX - (r.left + r.width / 2);
-          const dy = e.clientY - (r.top + r.height / 2);
-          el.style.transform = "translate(" + dx * 0.25 + "px," + dy * 0.35 + "px)";
-        });
-        el.addEventListener("mouseleave", () => { el.style.transform = ""; el.style.transition = "transform .4s cubic-bezier(.23,1,.32,1)"; setTimeout(() => el.style.transition = "", 400); });
+        dot.style.transform = "translate(" + (e.clientX - 4.5) + "px," + (e.clientY - 4.5) + "px)";
+        dot.style.opacity = 1;
       });
     }
 

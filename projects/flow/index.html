@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flow — a calm task board</title>
+<meta name="description" content="Flow — a fast, drag-and-drop Kanban board. Organize tasks into columns, drag cards between them, and stay focused. Saves to your browser." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #eef1f6;
+    --col: #f3f5f9;
+    --card: #ffffff;
+    --ink: #0f172a;
+    --slate: #475569;
+    --muted: #94a3b8;
+    --line: #e2e8f0;
+    --accent: #2563eb;
+    --accent-soft: #e6efff;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.08);
+    --shadow: 0 8px 24px -10px rgba(15,23,42,0.25);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { background: var(--bg); color: var(--ink); font-family: "Inter", system-ui, sans-serif; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; overflow: hidden; }
+
+  /* TOP BAR */
+  .topbar { height: 60px; flex-shrink: 0; background: #0f172a; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; }
+  .brand { display: flex; align-items: center; gap: 11px; font-weight: 800; font-size: 18px; letter-spacing: -0.4px; }
+  .brand .mark { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #2563eb, #7c3aed); display: grid; place-items: center; font-size: 15px; }
+  .brand .sub { font-weight: 500; font-size: 13px; color: #94a3b8; margin-left: 4px; }
+  .tb-right { display: flex; align-items: center; gap: 12px; }
+  .tb-btn { font-size: 13px; font-weight: 600; color: #cbd5e1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 7px 14px; border-radius: 8px; cursor: pointer; transition: background .15s; }
+  .tb-btn:hover { background: rgba(255,255,255,0.16); color: #fff; }
+  .demo-flag { font-size: 12px; font-weight: 600; color: #93c5fd; text-decoration: none; }
+  @media (max-width: 560px) { .brand .sub, .demo-flag { display: none; } }
+
+  /* BOARD */
+  .board { flex: 1; display: flex; gap: 16px; padding: 20px; overflow-x: auto; overflow-y: hidden; align-items: flex-start; }
+  .column { flex: 0 0 300px; max-height: 100%; background: var(--col); border: 1px solid var(--line); border-radius: 14px; display: flex; flex-direction: column; max-width: 300px; }
+  .col-head { display: flex; align-items: center; gap: 8px; padding: 14px 16px 10px; }
+  .col-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .col-title { font-weight: 700; font-size: 14px; flex: 1; outline: none; }
+  .col-count { font-size: 12px; font-weight: 700; color: var(--muted); background: #fff; border: 1px solid var(--line); border-radius: 999px; min-width: 22px; text-align: center; padding: 1px 7px; }
+  .cards { padding: 4px 12px; overflow-y: auto; flex: 1; min-height: 24px; display: flex; flex-direction: column; gap: 9px; }
+  .cards::-webkit-scrollbar { width: 8px; } .cards::-webkit-scrollbar-thumb { background: #d4dbe6; border-radius: 8px; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 9px; padding: 12px 13px; box-shadow: var(--shadow-sm); cursor: grab; position: relative; transition: box-shadow .15s, transform .05s; }
+  .card:hover { box-shadow: var(--shadow); }
+  .card:active { cursor: grabbing; }
+  .card.dragging { opacity: 0.35; box-shadow: none; }
+  .card .label { display: inline-block; font-size: 11px; font-weight: 700; color: #fff; padding: 2px 9px; border-radius: 999px; margin-bottom: 8px; }
+  .card .ctitle { font-size: 14px; font-weight: 500; line-height: 1.4; outline: none; word-break: break-word; }
+  .card .del { position: absolute; top: 7px; right: 8px; width: 20px; height: 20px; border-radius: 6px; border: none; background: transparent; color: var(--muted); cursor: pointer; font-size: 15px; line-height: 1; opacity: 0; transition: opacity .15s, background .15s, color .15s; display: grid; place-items: center; }
+  .card:hover .del { opacity: 1; }
+  .card .del:hover { background: #fee2e2; color: #ef4444; }
+  .card .meta { display: flex; align-items: center; gap: 6px; margin-top: 9px; font-size: 12px; color: var(--muted); }
+
+  .add-card { margin: 4px 12px 12px; }
+  .add-btn { width: 100%; text-align: left; background: transparent; border: none; color: var(--slate); font-size: 13px; font-weight: 600; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background .15s; }
+  .add-btn:hover { background: rgba(15,23,42,0.05); color: var(--ink); }
+  .add-form { display: none; flex-direction: column; gap: 8px; }
+  .add-form.show { display: flex; }
+  .add-form textarea { resize: none; border: 1px solid var(--accent); border-radius: 9px; padding: 10px 12px; font-family: inherit; font-size: 14px; outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .add-actions { display: flex; gap: 8px; align-items: center; }
+  .add-actions .save { background: var(--accent); color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; }
+  .add-actions .save:hover { background: #1d4ed8; }
+  .add-actions .cancel { background: transparent; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 4px 8px; }
+
+  .add-list { flex: 0 0 260px; }
+  .add-list-btn { width: 100%; background: rgba(15,23,42,0.04); border: 1px dashed #c7d0dd; border-radius: 14px; color: var(--slate); font-size: 14px; font-weight: 600; padding: 14px; cursor: pointer; transition: background .15s; }
+  .add-list-btn:hover { background: rgba(15,23,42,0.07); }
+
+  .hint { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--muted); background: rgba(255,255,255,0.9); border: 1px solid var(--line); padding: 6px 14px; border-radius: 999px; box-shadow: var(--shadow-sm); }
+  @media (max-width: 600px) { .hint { display: none; } }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand"><span class="mark">▦</span> Flow <span class="sub">a calm task board</span></div>
+    <div class="tb-right">
+      <button class="tb-btn" id="reset">Reset board</button>
+      <a class="demo-flag" href="https://caliskel.github.io" target="_blank" rel="noopener">◆ by caliskel</a>
+    </div>
+  </div>
+
+  <div class="board" id="board"></div>
+  <div class="hint">Drag cards between columns · double-click a card to edit · everything saves to your browser</div>
+
+  <script>
+    const STORE = "flow.board.v1";
+    const LABELS = { Design:"#8b5cf6", Bug:"#ef4444", Feature:"#10b981", Research:"#f59e0b", Urgent:"#ec4899" };
+    const COL_DOTS = ["#94a3b8", "#2563eb", "#f59e0b", "#10b981"];
+
+    const seed = {
+      columns: [
+        { id: "c1", name: "Backlog", cards: [
+          { id: "t1", title: "Research competitor pricing pages", label: "Research" },
+          { id: "t2", title: "Sketch new onboarding flow", label: "Design" },
+          { id: "t3", title: "Fix invoice PDF export bug", label: "Bug" },
+        ]},
+        { id: "c2", name: "In progress", cards: [
+          { id: "t4", title: "Build the drag-and-drop board", label: "Feature" },
+          { id: "t5", title: "Wire up auto-save to localStorage", label: "Feature" },
+        ]},
+        { id: "c3", name: "Review", cards: [
+          { id: "t6", title: "Polish empty-state copy", label: "Design" },
+        ]},
+        { id: "c4", name: "Done", cards: [
+          { id: "t7", title: "Set up project & layout", label: null },
+          { id: "t8", title: "Pick color system", label: "Design" },
+        ]},
+      ],
+    };
+
+    let model = load();
+    function load() { try { const r = localStorage.getItem(STORE); return r ? JSON.parse(r) : structuredClone(seed); } catch { return structuredClone(seed); } }
+    function save() { localStorage.setItem(STORE, JSON.stringify(model)); }
+    const uid = () => "x" + Math.abs(Date.now() ^ (performance.now() * 1000 | 0)).toString(36);
+
+    const board = document.getElementById("board");
+
+    function render() {
+      board.innerHTML = "";
+      model.columns.forEach((col, ci) => board.appendChild(renderColumn(col, ci)));
+      const addList = document.createElement("div");
+      addList.className = "add-list";
+      addList.innerHTML = '<button class="add-list-btn">+ Add another list</button>';
+      addList.querySelector("button").addEventListener("click", () => {
+        model.columns.push({ id: uid(), name: "New list", cards: [] }); save(); render();
+      });
+      board.appendChild(addList);
+    }
+
+    function renderColumn(col, ci) {
+      const el = document.createElement("div");
+      el.className = "column"; el.dataset.col = col.id;
+      const dot = COL_DOTS[ci % COL_DOTS.length];
+      el.innerHTML =
+        '<div class="col-head"><span class="col-dot" style="background:' + dot + '"></span>' +
+        '<span class="col-title" contenteditable spellcheck="false"></span>' +
+        '<span class="col-count">' + col.cards.length + '</span></div>' +
+        '<div class="cards"></div>' +
+        '<div class="add-card">' +
+          '<button class="add-btn">+ Add a card</button>' +
+          '<div class="add-form"><textarea rows="2" placeholder="What needs doing?"></textarea>' +
+          '<div class="add-actions"><button class="save">Add card</button><button class="cancel">✕</button></div></div>' +
+        '</div>';
+
+      const titleEl = el.querySelector(".col-title");
+      titleEl.textContent = col.name;
+      titleEl.addEventListener("blur", () => { col.name = titleEl.textContent.trim() || "Untitled"; titleEl.textContent = col.name; save(); });
+      titleEl.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); titleEl.blur(); } });
+
+      const list = el.querySelector(".cards");
+      col.cards.forEach((card) => list.appendChild(renderCard(card)));
+      wireDnD(list, el);
+      wireAdd(el, col, list);
+      return el;
+    }
+
+    function renderCard(card) {
+      const el = document.createElement("div");
+      el.className = "card"; el.draggable = true; el.dataset.id = card.id;
+      const lab = card.label && LABELS[card.label]
+        ? '<span class="label" style="background:' + LABELS[card.label] + '">' + card.label + '</span>' : "";
+      el.innerHTML = lab +
+        '<div class="ctitle" spellcheck="false"></div>' +
+        '<button class="del" title="Delete">×</button>';
+      el.querySelector(".ctitle").textContent = card.title;
+
+      el.querySelector(".del").addEventListener("click", (e) => { e.stopPropagation(); el.remove(); syncFromDOM(); });
+
+      const t = el.querySelector(".ctitle");
+      el.addEventListener("dblclick", () => { t.contentEditable = "true"; t.focus();
+        const r = document.createRange(); r.selectNodeContents(t); const s = getSelection(); s.removeAllRanges(); s.addRange(r); });
+      t.addEventListener("blur", () => { t.contentEditable = "false"; if (!t.textContent.trim()) { el.remove(); } syncFromDOM(); });
+      t.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); t.blur(); } });
+
+      el.addEventListener("dragstart", () => { el.classList.add("dragging"); });
+      el.addEventListener("dragend", () => { el.classList.remove("dragging"); syncFromDOM(); });
+      return el;
+    }
+
+    function wireDnD(list) {
+      list.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        const dragging = document.querySelector(".card.dragging");
+        if (!dragging) return;
+        const after = getDragAfter(list, e.clientY);
+        if (after == null) list.appendChild(dragging);
+        else list.insertBefore(dragging, after);
+      });
+    }
+    function getDragAfter(list, y) {
+      const els = [...list.querySelectorAll(".card:not(.dragging)")];
+      return els.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) return { offset, element: child };
+        return closest;
+      }, { offset: -Infinity }).element;
+    }
+
+    function wireAdd(colEl, col, list) {
+      const btn = colEl.querySelector(".add-btn");
+      const form = colEl.querySelector(".add-form");
+      const ta = colEl.querySelector("textarea");
+      const showForm = () => { form.classList.add("show"); btn.style.display = "none"; ta.focus(); };
+      const hideForm = () => { form.classList.remove("show"); btn.style.display = ""; ta.value = ""; };
+      const add = () => {
+        const v = ta.value.trim(); if (!v) { hideForm(); return; }
+        const card = { id: uid(), title: v, label: null };
+        list.appendChild(renderCard(card));
+        ta.value = ""; ta.focus(); syncFromDOM();
+      };
+      btn.addEventListener("click", showForm);
+      colEl.querySelector(".save").addEventListener("click", add);
+      colEl.querySelector(".cancel").addEventListener("click", hideForm);
+      ta.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); add(); } if (e.key === "Escape") hideForm(); });
+    }
+
+    // rebuild model from current DOM (order + columns), then save + refresh counts
+    function syncFromDOM() {
+      const flat = {};
+      model.columns.forEach((c) => c.cards.forEach((card) => { flat[card.id] = card; }));
+      const cols = [...board.querySelectorAll(".column")].map((colEl) => {
+        const id = colEl.dataset.col;
+        const existing = model.columns.find((c) => c.id === id);
+        const name = existing ? existing.name : "List";
+        const cards = [...colEl.querySelectorAll(".card")].map((cardEl) => {
+          const cid = cardEl.dataset.id;
+          const title = cardEl.querySelector(".ctitle").textContent.trim();
+          return flat[cid] ? { ...flat[cid], title } : { id: cid, title, label: null };
+        });
+        return { id, name, cards };
+      });
+      model.columns = cols;
+      save();
+      board.querySelectorAll(".column").forEach((colEl) => {
+        colEl.querySelector(".col-count").textContent = colEl.querySelectorAll(".card").length;
+      });
+    }
+
+    document.getElementById("reset").addEventListener("click", () => {
+      if (confirm("Reset the board to the demo content?")) { model = structuredClone(seed); save(); render(); }
+    });
+
+    render();
+  </script>
+</body>
+</html>

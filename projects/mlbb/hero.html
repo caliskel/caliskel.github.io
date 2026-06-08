@@ -33,7 +33,7 @@
   /* HERO BANNER */
   .banner { position: relative; margin-top: 20px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); min-height: 360px; display: flex; align-items: flex-end; }
   .banner .art { position: absolute; inset: 0; background-size: cover; background-position: center; filter: blur(30px) brightness(0.4) saturate(1.15); transform: scale(1.25); }
-  .banner .portrait { position: absolute; right: 0; top: 0; bottom: 0; width: 58%; max-width: 520px; background-size: cover; background-position: center top;
+  .banner .portrait { position: absolute; right: 0; top: 0; bottom: 0; width: 58%; max-width: 520px; background-size: cover; background-position: center 30%;
     -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 50%); mask-image: linear-gradient(90deg, transparent 0%, #000 50%); }
   .banner .scrim { position: absolute; inset: 0; background:
     linear-gradient(180deg, rgba(7,7,12,0.15) 0%, rgba(7,7,12,0.45) 55%, rgba(7,7,12,0.92) 100%),
@@ -162,7 +162,7 @@
       const valid=(ids||[]).filter(i=>i&&byId[i]);
       if(!valid.length) return '<div class="cnone">no data</div>';
       return '<div class="clist">'+valid.map(i=>{const h=byId[i];
-        return '<a class="cc" href="./hero.html?id='+i+'&v=9"><img loading="lazy" src="'+h.img+'"/><span>'+esc(h.name)+'</span></a>';}).join('')+'</div>';
+        return '<a class="cc" href="./hero.html?id='+i+'&v=10"><img loading="lazy" src="'+h.img+'"/><span>'+esc(h.name)+'</span></a>';}).join('')+'</div>';
     }
 
     function render(d){

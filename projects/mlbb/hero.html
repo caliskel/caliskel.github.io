@@ -84,23 +84,24 @@
   /* build */
   .build { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; margin-bottom: 14px; }
   .build .bhead { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line-soft); }
-  .lane-badge { font-family: var(--disp); font-weight: 700; letter-spacing: 1.5px; font-size: 12px; color: var(--blue); border: 1px solid rgba(122,162,255,0.4); border-radius: 6px; padding: 4px 11px; }
-  .bwr { font-size: 13px; color: var(--muted); } .bwr b { font-family: var(--disp); font-size: 22px; color: var(--green); } .bwr i { font-style: normal; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; }
-  .bpr { margin-left: auto; font-size: 12px; color: var(--muted); }
-  .build .brow { display: flex; gap: 36px; flex-wrap: wrap; align-items: flex-start; }
-  .build .emb .pill { align-items: flex-start; }
-  .build .attrs { list-style: none; margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
-  .build .attrs li { font-size: 12px; color: var(--gold); }
-  .build .seg .t { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-  .build .pill { display: flex; align-items: center; gap: 10px; }
-  .build .pill img { width: 46px; height: 46px; border-radius: 10px; border: 1px solid var(--line); object-fit: cover; }
-  .build .pill .nm { font-size: 13px; font-weight: 600; }
+  .bidx { font-family: var(--disp); font-weight: 700; letter-spacing: 1.5px; font-size: 13px; color: var(--gold); }
+  .spellp { margin-left: auto; display: inline-flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 600; }
+  .spellp img { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); object-fit: cover; }
+  .build .seg { margin-bottom: 18px; } .build .seg:last-child { margin-bottom: 0; }
+  .build .seg .t { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
   .items { display: flex; gap: 10px; flex-wrap: wrap; }
-  .it { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 64px; }
-  .it img { width: 50px; height: 50px; border-radius: 10px; border: 1px solid var(--line); object-fit: cover; }
-  .it span { font-size: 10px; color: var(--muted); text-align: center; line-height: 1.15; }
-  .build .wr { margin-left: auto; text-align: right; }
-  .build .wr b { font-family: var(--disp); font-size: 26px; color: var(--green); } .build .wr span { font-size: 11px; color: var(--muted); display: block; text-transform: uppercase; letter-spacing: 1px; }
+  .it { position: relative; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 66px; }
+  .it img { width: 54px; height: 54px; border-radius: 10px; border: 1px solid var(--line); object-fit: cover; }
+  .it .ord { position: absolute; top: -4px; left: 6px; width: 17px; height: 17px; border-radius: 50%; background: var(--grad-gold); color: #1a1205; font-size: 10px; font-weight: 800; display: grid; place-items: center; z-index: 2; }
+  .it span:last-child { font-size: 10px; color: var(--muted); text-align: center; line-height: 1.15; }
+  .embrow { display: flex; gap: 34px; flex-wrap: wrap; align-items: flex-start; }
+  .emain { display: flex; align-items: center; gap: 11px; }
+  .emain img { width: 52px; height: 52px; border-radius: 11px; border: 1px solid rgba(232,201,134,0.4); object-fit: cover; }
+  .emain .emn { font-family: var(--disp); font-weight: 700; font-size: 16px; color: var(--gold); }
+  .talents { display: flex; gap: 12px; flex-wrap: wrap; }
+  .tal { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 70px; }
+  .tal img { width: 48px; height: 48px; border-radius: 10px; border: 1px solid var(--line); object-fit: cover; }
+  .tal span { font-size: 10px; color: var(--muted); text-align: center; line-height: 1.15; }
 
   .story { color: var(--muted); font-size: 15px; font-style: italic; max-width: 720px; }
   .loading, .errbox { text-align: center; color: var(--muted); padding: 80px 0; }
@@ -172,25 +173,21 @@
         '<div class="cbox y"><h4>Synergy</h4><div class="d">Pairs well with</div>'+counters(r.assist)+'</div>' +
         '</div></section>';
 
-      const blist = (d.builds && d.builds.length) ? d.builds : (d.build ? [d.build] : []);
+      const fb = (d.fullbuilds && d.fullbuilds.length) ? d.fullbuilds : null;
       let build='';
-      if(blist.length){
+      if(fb){
         build='<section class="blk"><div class="blk-h">Recommended builds</div>' +
-        blist.map(b=>{
-          const items=(b.items||[]).filter(x=>x&&x.icon).map(x=>'<div class="it"><img loading="lazy" src="'+x.icon+'"/><span>'+esc(x.name)+'</span></div>').join('');
-          const attrs=((b.emblem&&b.emblem.attrs)||[]).map(a=>'<li>'+esc(a)+'</li>').join('');
-          const embName = b.emblem ? (b.emblem.set || b.emblem.name || 'Emblem') : '';
+        fb.map((b,idx)=>{
+          const items=(b.items||[]).filter(x=>x&&x.icon).map((x,i)=>'<div class="it"><span class="ord">'+(i+1)+'</span><img loading="lazy" src="'+x.icon+'"/><span>'+esc(x.name)+'</span></div>').join('');
+          const talents=(b.talents||[]).slice().sort((a,c)=>(a.tier||0)-(c.tier||0)).map(t=>'<div class="tal"><img src="'+t.icon+'"/><span>'+esc(t.name)+'</span></div>').join('');
           return '<div class="build">' +
-            '<div class="bhead">' +
-              (b.lane?'<span class="lane-badge">'+esc(b.lane)+'</span>':'') +
-              (b.winRate?'<span class="bwr"><b>'+b.winRate.toFixed(1)+'%</b> <i>win</i></span>':'') +
-              (b.pickRate?'<span class="bpr">'+b.pickRate.toFixed(1)+'% pick</span>':'') +
+            '<div class="bhead"><span class="bidx">Build '+(idx+1)+'</span>' +
+              (b.spell&&b.spell.icon?'<span class="spellp"><img src="'+b.spell.icon+'"/>'+esc(b.spell.name||'Spell')+'</span>':'') + '</div>' +
+            (items?'<div class="seg"><div class="t">Items · 6</div><div class="items">'+items+'</div></div>':'') +
+            '<div class="seg embrow">' +
+              (b.emblem&&b.emblem.icon?'<div class="emain"><img src="'+b.emblem.icon+'"/><div><div class="t" style="margin:0">Emblem</div><div class="emn">'+esc(b.emblem.name||'Emblem')+'</div></div></div>':'') +
+              (talents?'<div class="taltrack"><div class="t">Talents · 3</div><div class="talents">'+talents+'</div></div>':'') +
             '</div>' +
-            '<div class="brow">' +
-              (b.emblem&&b.emblem.icon?'<div class="seg emb"><div class="t">Emblem</div><div class="pill"><img src="'+b.emblem.icon+'"/><div><div class="nm">'+esc(embName)+'</div>'+(attrs?'<ul class="attrs">'+attrs+'</ul>':'')+'</div></div></div>':'') +
-              (b.spell&&b.spell.icon?'<div class="seg"><div class="t">Battle spell</div><div class="pill"><img src="'+b.spell.icon+'"/><span class="nm">'+esc(b.spell.name)+'</span></div></div>':'') +
-            '</div>' +
-            (items?'<div class="seg" style="margin-top:16px"><div class="t">Core items</div><div class="items">'+items+'</div></div>':'') +
           '</div>';
         }).join('') +
         '</section>';

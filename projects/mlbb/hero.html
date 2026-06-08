@@ -89,10 +89,19 @@
 
   /* skins */
   .skins { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 14px; }
-  .skin { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; transition: transform .18s, border-color .18s, box-shadow .18s; }
+  .skin { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform .18s, border-color .18s, box-shadow .18s; }
   .skin:hover { transform: translateY(-4px); border-color: rgba(232,201,134,0.55); box-shadow: 0 14px 30px -14px rgba(0,0,0,0.75); }
   .skin .sp { aspect-ratio: 3/4; background-size: cover; background-position: center top; background-color: var(--bg2); }
   .skin .snm { padding: 10px 10px; font-size: 12px; font-weight: 600; text-align: center; color: var(--gold-bright); line-height: 1.25; }
+
+  /* lightbox */
+  .lb { position: fixed; inset: 0; z-index: 100; background: rgba(4,4,8,0.93); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; padding: 34px; }
+  .lb.open { display: flex; }
+  .lb img { max-width: 95vw; max-height: 84vh; border-radius: 14px; border: 1px solid var(--line); box-shadow: 0 30px 90px -20px rgba(0,0,0,0.9); }
+  .lb .cap { position: absolute; bottom: 26px; left: 0; right: 0; text-align: center; font-family: var(--disp); font-weight: 700; font-size: clamp(18px,3vw,26px); letter-spacing: 1px; color: var(--gold); text-shadow: 0 2px 12px #000; padding: 0 20px; }
+  .lb .x { position: absolute; top: 18px; right: 22px; width: 44px; height: 44px; border-radius: 11px; border: 1px solid var(--line); background: rgba(20,18,32,0.75); color: var(--text); font-size: 24px; cursor: pointer; display: grid; place-items: center; }
+  .lb .x:hover { border-color: var(--gold); color: var(--gold); }
+  .lb .hint { position: absolute; top: 24px; left: 24px; font-size: 12px; color: var(--muted); letter-spacing: 0.5px; }
 
   /* build */
   .build { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; margin-bottom: 14px; }
@@ -134,6 +143,8 @@
 
   <footer>Data: open MLBB API &amp; Moonton · made by <a href="https://caliskel.github.io" target="_blank" rel="noopener">caliskel</a></footer>
 
+  <div class="lb" id="lb"><span class="hint">click outside or Esc to close</span><button class="x" id="lbx" aria-label="Close">×</button><img id="lbimg" alt="" /><div class="cap" id="lbcap"></div></div>
+
   <script src="./data/heroes.js"></script>
   <script>
     const ROSTER = (window.MLBB_HEROES || []);
@@ -151,7 +162,7 @@
       const valid=(ids||[]).filter(i=>i&&byId[i]);
       if(!valid.length) return '<div class="cnone">no data</div>';
       return '<div class="clist">'+valid.map(i=>{const h=byId[i];
-        return '<a class="cc" href="./hero.html?id='+i+'&v=8"><img loading="lazy" src="'+h.img+'"/><span>'+esc(h.name)+'</span></a>';}).join('')+'</div>';
+        return '<a class="cc" href="./hero.html?id='+i+'&v=9"><img loading="lazy" src="'+h.img+'"/><span>'+esc(h.name)+'</span></a>';}).join('')+'</div>';
     }
 
     function render(d){
@@ -209,7 +220,8 @@
       const story = d.story? '<section class="blk"><div class="blk-h">Lore</div><p class="story">'+esc(d.story)+'</p></section>' : '';
 
       const skins = (d.skins && d.skins.length) ? '<section class="blk"><div class="blk-h">Skins · '+d.skins.length+'</div><div class="skins">' +
-        d.skins.filter(s=>s&&s.img).map(s=>'<div class="skin"><div class="sp" style="background-image:url(\''+s.img+'\')"></div><div class="snm">'+esc(s.name||'Skin')+'</div></div>').join('') +
+        d.skins.filter(s=>s&&s.img).map(s=>{ var full=(s.img||'').replace(/\/scale-to-width-down\/\d+/,''); var nm=esc(s.name||'Skin');
+          return '<div class="skin" data-full="'+full+'" data-name="'+nm+'"><div class="sp" style="background-image:url(\''+s.img+'\')"></div><div class="snm">'+nm+'</div></div>'; }).join('') +
         '</div></section>' : '';
 
       root.innerHTML =
@@ -219,6 +231,14 @@
           '<div class="info"><div class="info-txt"><h1 class="gold-text">'+esc(name)+'</h1><div class="tags">'+cls+lanes+spec+'</div>'+meta+'</div></div></div>' +
         stats + skins + skills + ctr + build + story;
     }
+
+    // lightbox for skins (full-quality image)
+    const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'), lbcap=document.getElementById('lbcap');
+    function closeLB(){ lb.classList.remove('open'); lbimg.src=''; document.body.style.overflow=''; }
+    document.addEventListener('click', (e)=>{ const s=e.target.closest('.skin'); if(s && s.dataset.full){ lbimg.src=s.dataset.full; lbcap.textContent=s.dataset.name||''; lb.classList.add('open'); document.body.style.overflow='hidden'; } });
+    document.getElementById('lbx').addEventListener('click', closeLB);
+    lb.addEventListener('click', (e)=>{ if(e.target===lb || e.target===lbimg) closeLB(); });
+    addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLB(); });
 
     if(!id || !byId[id]){ root.innerHTML='<div class="errbox">Hero not found. <a href="./index.html" style="color:var(--gold)">Back to all heroes ›</a></div>'; }
     else {

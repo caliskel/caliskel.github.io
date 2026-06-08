@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MLBB Codex — герои, контрпики и предметы</title>
+<meta name="description" content="Справочник по Mobile Legends: Bang Bang — все герои, контрпики, синергия и мета. Данные обновляются из открытого API." />
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0e18;
+    --bg2: #0f1626;
+    --panel: #131b2e;
+    --panel2: #1a2440;
+    --line: rgba(255,255,255,0.08);
+    --gold: #f5c451;
+    --blue: #3b82f6;
+    --green: #2ee6a6;
+    --red: #ff5470;
+    --text: #e6ebf5;
+    --muted: #8a93a8;
+    --disp: "Rajdhani", system-ui, sans-serif;
+    --body: "Inter", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--body); -webkit-font-smoothing: antialiased; line-height: 1.5;
+    background-image: radial-gradient(900px 500px at 80% -10%, rgba(59,130,246,0.12), transparent 60%), radial-gradient(700px 500px at 0% 0%, rgba(245,196,81,0.08), transparent 55%); background-attachment: fixed; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+
+  /* HEADER */
+  header.top { position: sticky; top: 0; z-index: 30; background: rgba(10,14,24,0.82); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .top .wrap { display: flex; align-items: center; gap: 18px; height: 66px; }
+  .brand { font-family: var(--disp); font-weight: 700; font-size: 22px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px; }
+  .brand .mk { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--gold), #e0972c); display: grid; place-items: center; color: #1a1205; font-weight: 800; font-family: var(--disp); }
+  .brand b { color: var(--gold); }
+  .brand .sub { font-size: 12px; color: var(--muted); font-weight: 500; font-family: var(--body); }
+  .top .spacer { flex: 1; }
+  .credit { font-size: 12px; color: var(--muted); }
+  .credit a { color: var(--gold); }
+  @media (max-width: 640px) { .brand .sub, .credit { display: none; } }
+
+  /* CONTROLS */
+  .controls { padding: 26px 0 16px; }
+  .ctitle { font-family: var(--disp); font-weight: 700; font-size: clamp(26px, 4vw, 40px); letter-spacing: 0.5px; }
+  .ctitle b { color: var(--gold); }
+  .csub { color: var(--muted); margin-top: 4px; font-size: 14px; }
+  .bar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 20px; }
+  .search { position: relative; flex: 1; min-width: 220px; }
+  .search input { width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px 12px 40px; color: var(--text); font-size: 15px; font-family: var(--body); outline: none; transition: border-color .2s, box-shadow .2s; }
+  .search input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,130,246,0.18); }
+  .search::before { content: "⌕"; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 17px; }
+  select.sort { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; color: var(--text); font-size: 14px; font-family: var(--body); outline: none; cursor: pointer; }
+  .roles { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .role-chip { font-family: var(--disp); font-weight: 600; font-size: 14px; letter-spacing: 0.3px; padding: 7px 15px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); cursor: pointer; transition: all .18s; }
+  .role-chip:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .role-chip.on { background: var(--gold); color: #1a1205; border-color: var(--gold); }
+  .count { color: var(--muted); font-size: 13px; margin: 16px 0 6px; }
+
+  /* GRID */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; padding-bottom: 60px; }
+  .hero { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; cursor: pointer; transition: transform .18s, border-color .18s, box-shadow .18s; position: relative; }
+  .hero:hover { transform: translateY(-4px); border-color: rgba(245,196,81,0.5); box-shadow: 0 16px 36px -16px rgba(0,0,0,0.7); }
+  .hero .pic { aspect-ratio: 1/1; background: var(--bg2); position: relative; overflow: hidden; }
+  .hero .pic img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+  .hero:hover .pic img { transform: scale(1.07); }
+  .hero .wr { position: absolute; top: 8px; right: 8px; font-family: var(--disp); font-weight: 700; font-size: 13px; padding: 2px 8px; border-radius: 6px; background: rgba(10,14,24,0.75); border: 1px solid var(--line); }
+  .hero .wr.good { color: var(--green); } .hero .wr.bad { color: var(--red); }
+  .hero .meta { padding: 10px 12px 12px; }
+  .hero .nm { font-family: var(--disp); font-weight: 700; font-size: 17px; letter-spacing: 0.3px; }
+  .hero .rl { font-size: 11px; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .empty { color: var(--muted); padding: 40px 0; text-align: center; }
+
+  /* MODAL */
+  .overlay { position: fixed; inset: 0; z-index: 60; background: rgba(5,8,15,0.78); backdrop-filter: blur(6px); display: none; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+  .overlay.open { display: flex; }
+  .modal { width: 100%; max-width: 720px; background: var(--bg2); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; animation: pop .25s cubic-bezier(.2,.8,.2,1); }
+  @keyframes pop { from { opacity: 0; transform: translateY(20px) scale(.98); } to { opacity: 1; transform: none; } }
+  .m-head { display: flex; gap: 18px; padding: 24px; background: linear-gradient(120deg, rgba(245,196,81,0.1), rgba(59,130,246,0.08)); border-bottom: 1px solid var(--line); position: relative; }
+  .m-head .ph { width: 96px; height: 96px; border-radius: 14px; object-fit: cover; border: 1px solid var(--line); flex-shrink: 0; background: var(--panel); }
+  .m-head .hn { font-family: var(--disp); font-weight: 700; font-size: 32px; letter-spacing: 0.5px; }
+  .m-head .roles2 { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .m-head .rb { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--panel2); color: var(--text); }
+  .m-stats { display: flex; gap: 18px; margin-top: 12px; }
+  .m-stats .st b { font-family: var(--disp); font-size: 19px; }
+  .m-stats .st span { font-size: 11px; color: var(--muted); display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+  .m-close { position: absolute; top: 16px; right: 18px; width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line); background: rgba(10,14,24,0.6); color: var(--text); font-size: 20px; cursor: pointer; display: grid; place-items: center; }
+  .m-close:hover { border-color: var(--red); color: var(--red); }
+  .m-body { padding: 22px 24px 28px; }
+  .cgroup { margin-bottom: 22px; }
+  .cgroup h4 { font-family: var(--disp); font-weight: 700; font-size: 15px; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .cgroup .desc { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .cgroup h4 .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .strong h4 { color: var(--green); } .strong .dot { background: var(--green); }
+  .weak h4 { color: var(--red); } .weak .dot { background: var(--red); }
+  .syn h4 { color: var(--gold); } .syn .dot { background: var(--gold); }
+  .clist { display: flex; gap: 12px; flex-wrap: wrap; }
+  .cchip { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; width: 74px; }
+  .cchip img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; border: 1px solid var(--line); transition: transform .18s, border-color .18s; }
+  .cchip:hover img { transform: translateY(-3px); border-color: rgba(245,196,81,0.6); }
+  .cchip span { font-size: 12px; color: var(--muted); text-align: center; line-height: 1.2; }
+  .cnone { font-size: 13px; color: var(--muted); }
+
+  footer { border-top: 1px solid var(--line); padding: 24px 0 40px; color: var(--muted); font-size: 13px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  footer a { color: var(--gold); }
+</style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="brand"><span class="mk">ML</span> <span>MLBB <b>Codex</b></span> <span class="sub">— герои · контрпики · мета</span></div>
+      <div class="spacer"></div>
+      <div class="credit">проект <a href="https://caliskel.github.io" target="_blank" rel="noopener">caliskel</a></div>
+    </div>
+  </header>
+
+  <div class="wrap controls">
+    <div class="ctitle">Все герои и <b>контрпики</b></div>
+    <div class="csub">Кого брать против кого. Нажми на героя, чтобы увидеть, кого он контрит, кто контрит его и с кем синергия.</div>
+    <div class="bar">
+      <label class="search"><input id="search" type="text" placeholder="Поиск героя по имени…" autocomplete="off" /></label>
+      <select class="sort" id="sort">
+        <option value="name">По имени</option>
+        <option value="win">По винрейту</option>
+        <option value="ban">По бан-рейту</option>
+        <option value="pick">По пик-рейту</option>
+      </select>
+    </div>
+    <div class="roles" id="roles"></div>
+    <div class="count" id="count"></div>
+  </div>
+
+  <div class="wrap">
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <div>Данные: открытый MLBB API + Moonton. Скины — в разработке.</div>
+      <div>© <span id="yr"></span> MLBB Codex · сделал <a href="https://caliskel.github.io" target="_blank" rel="noopener">caliskel</a></div>
+    </div>
+  </footer>
+
+  <div class="overlay" id="overlay">
+    <div class="modal" id="modal"></div>
+  </div>
+
+  <script src="./data/heroes.js"></script>
+  <script>
+    const HEROES = (window.MLBB_HEROES || []).filter(h => h.name);
+    const byId = {}; HEROES.forEach(h => byId[h.id] = h);
+    document.getElementById("yr").textContent = new Date().getFullYear();
+
+    const ROLE_RU = { "Exp Lane": "Опыт", "Gold Lane": "Золото", "Jungle": "Лес", "Mid Lane": "Мид", "Roam": "Роум" };
+    const ALL_ROLES = ["Exp Lane", "Jungle", "Mid Lane", "Gold Lane", "Roam"];
+
+    let q = "", role = "all", sort = "name";
+
+    // build role chips
+    const rolesEl = document.getElementById("roles");
+    function chip(val, label) { const b = document.createElement("button"); b.className = "role-chip" + (val === role ? " on" : ""); b.textContent = label; b.dataset.role = val; return b; }
+    function renderRoles() {
+      rolesEl.innerHTML = "";
+      rolesEl.appendChild(chip("all", "Все"));
+      ALL_ROLES.forEach(r => rolesEl.appendChild(chip(r, ROLE_RU[r] || r)));
+    }
+    rolesEl.addEventListener("click", (e) => { const b = e.target.closest(".role-chip"); if (!b) return; role = b.dataset.role; renderRoles(); render(); });
+
+    document.getElementById("search").addEventListener("input", (e) => { q = e.target.value.trim().toLowerCase(); render(); });
+    document.getElementById("sort").addEventListener("change", (e) => { sort = e.target.value; render(); });
+
+    function wrClass(w) { return w == null ? "" : (w >= 50 ? "good" : "bad"); }
+    function fmtPct(v) { return v == null ? "—" : v.toFixed(1) + "%"; }
+
+    function filtered() {
+      let list = HEROES.filter(h => {
+        if (q && !h.name.toLowerCase().includes(q)) return false;
+        if (role !== "all" && !(h.roles || []).includes(role)) return false;
+        return true;
+      });
+      const dir = sort === "name" ? 1 : -1;
+      list.sort((a, b) => {
+        if (sort === "name") return (a.name).localeCompare(b.name);
+        return ((b[sort] ?? -1) - (a[sort] ?? -1));
+      });
+      return list;
+    }
+
+    const grid = document.getElementById("grid");
+    function render() {
+      const list = filtered();
+      document.getElementById("count").textContent = list.length + " героев";
+      if (!list.length) { grid.innerHTML = '<div class="empty">Ничего не найдено</div>'; return; }
+      grid.innerHTML = list.map(h => {
+        const roles = (h.roles || []).map(r => ROLE_RU[r] || r).join(" · ");
+        return '<div class="hero" data-id="' + h.id + '">' +
+          '<div class="pic"><img loading="lazy" src="' + h.img + '" alt="' + h.name + '" />' +
+          (h.win != null ? '<span class="wr ' + wrClass(h.win) + '">' + h.win.toFixed(0) + '%</span>' : '') + '</div>' +
+          '<div class="meta"><div class="nm">' + h.name + '</div><div class="rl">' + (roles || '—') + '</div></div></div>';
+      }).join("");
+    }
+    grid.addEventListener("click", (e) => { const c = e.target.closest(".hero"); if (c) openHero(+c.dataset.id); });
+
+    // MODAL
+    const overlay = document.getElementById("overlay"), modal = document.getElementById("modal");
+    function cchips(ids) {
+      const valid = (ids || []).filter(id => id && byId[id]);
+      if (!valid.length) return '<div class="cnone">нет данных</div>';
+      return '<div class="clist">' + valid.map(id => { const h = byId[id];
+        return '<div class="cchip" data-id="' + id + '"><img loading="lazy" src="' + h.img + '" alt="' + h.name + '"/><span>' + h.name + '</span></div>';
+      }).join("") + '</div>';
+    }
+    function openHero(id) {
+      const h = byId[id]; if (!h) return;
+      const roles = (h.roles || []).map(r => '<span class="rb">' + (ROLE_RU[r] || r) + '</span>').join("");
+      modal.innerHTML =
+        '<div class="m-head">' +
+          '<img class="ph" src="' + h.img + '" alt="' + h.name + '"/>' +
+          '<div><div class="hn">' + h.name + '</div><div class="roles2">' + roles + '</div>' +
+            '<div class="m-stats">' +
+              '<div class="st"><b class="' + wrClass(h.win) + '" style="color:' + (h.win >= 50 ? 'var(--green)' : 'var(--red)') + '">' + fmtPct(h.win) + '</b><span>Винрейт</span></div>' +
+              '<div class="st"><b>' + fmtPct(h.ban) + '</b><span>Бан</span></div>' +
+              '<div class="st"><b>' + fmtPct(h.pick) + '</b><span>Пик</span></div>' +
+            '</div>' +
+          '</div>' +
+          '<button class="m-close" id="mClose">×</button>' +
+        '</div>' +
+        '<div class="m-body">' +
+          '<div class="cgroup strong"><h4><span class="dot"></span> Силён против</h4><div class="desc">' + h.name + ' уверенно играет против этих героев</div>' + cchips(h.strong) + '</div>' +
+          '<div class="cgroup weak"><h4><span class="dot"></span> Контрят его</h4><div class="desc">Берите этих героев против ' + h.name + '</div>' + cchips(h.weak) + '</div>' +
+          '<div class="cgroup syn"><h4><span class="dot"></span> Синергия</h4><div class="desc">Хорошо сочетается в команде с</div>' + cchips(h.assist) + '</div>' +
+        '</div>';
+      overlay.classList.add("open"); document.body.style.overflow = "hidden";
+      document.getElementById("mClose").addEventListener("click", closeModal);
+    }
+    function closeModal() { overlay.classList.remove("open"); document.body.style.overflow = ""; }
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) closeModal(); });
+    modal.addEventListener("click", (e) => { const c = e.target.closest(".cchip"); if (c) openHero(+c.dataset.id); });
+    addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+    renderRoles(); render();
+  </script>
+</body>
+</html>

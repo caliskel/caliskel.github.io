@@ -125,6 +125,7 @@
   .case .thumb .live { position: absolute; bottom: 10px; right: 12px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--cyan); text-shadow: none; border: 1px solid rgba(0,229,255,0.5); background: rgba(0,229,255,0.1); padding: 3px 8px; border-radius: 4px; }
   a.case.featured { border-color: rgba(0,229,255,0.4); }
   a.case.featured .thumb { background-image: url("./assets/vectrix.jpg?v=2"); background-size: cover; background-position: center; font-size: 0; }
+  a.case .thumb.shot-settle { background-image: url("./assets/settle.jpg?v=1"); background-size: cover; background-position: top center; font-size: 0; }
   .case .body { padding: 22px 24px; }
   .case .tags { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
   .tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); border: 1px solid rgba(255,255,255,0.12); padding: 3px 9px; border-radius: 999px; }
@@ -218,7 +219,7 @@
       <div class="sec-head reveal">
         <div class="eyebrow"><b>//</b> 02 — портфолио</div>
         <h2>Кейсы</h2>
-        <p>Реальный продукт уже в деле — остальное заменим на твои проекты по мере готовности.</p>
+        <p>Живые проекты, которые можно открыть и потрогать прямо сейчас.</p>
       </div>
       <div class="grid grid-3">
         <a href="https://caliskel.github.io/vectrix/" class="case featured reveal" target="_blank" rel="noopener">
@@ -229,12 +230,12 @@
             <p>Моя игра, собранная с нуля: геймплей, физика, звук, редактор уровней. Браузерная аркада на TypeScript и Canvas — без игровых движков.</p>
           </div>
         </a>
-        <a href="#contact" class="case reveal">
-          <div class="thumb">LANDING<span class="soon">demo soon</span></div>
+        <a href="https://caliskel.github.io/projects/settle/" class="case reveal" target="_blank" rel="noopener">
+          <div class="thumb shot-settle" aria-label="Settle"><span class="live">▶ открыть</span></div>
           <div class="body">
-            <div class="tags"><span class="tag">React</span><span class="tag">Tailwind</span></div>
-            <h3>Лендинг продукта</h3>
-            <p>Конверсионная страница с анимацией и формой захвата.</p>
+            <div class="tags"><span class="tag">Landing</span><span class="tag">HTML/CSS</span><span class="tag">Responsive</span></div>
+            <h3>Settle — лендинг SaaS</h3>
+            <p>Конверсионная посадочная для сервиса счетов: герой, фичи, тарифы, отзывы, FAQ. Адаптив и плавные анимации.</p>
           </div>
         </a>
         <a href="#contact" class="case reveal">

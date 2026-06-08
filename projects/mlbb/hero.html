@@ -141,7 +141,7 @@
       const valid=(ids||[]).filter(i=>i&&byId[i]);
       if(!valid.length) return '<div class="cnone">no data</div>';
       return '<div class="clist">'+valid.map(i=>{const h=byId[i];
-        return '<a class="cc" href="./hero.html?id='+i+'&v=3"><img loading="lazy" src="'+h.img+'"/><span>'+esc(h.name)+'</span></a>';}).join('')+'</div>';
+        return '<a class="cc" href="./hero.html?id='+i+'&v=4"><img loading="lazy" src="'+h.img+'"/><span>'+esc(h.name)+'</span></a>';}).join('')+'</div>';
     }
 
     function render(d){

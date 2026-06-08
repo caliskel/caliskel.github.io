@@ -32,7 +32,8 @@
   body { background: var(--bg); color: var(--ink); font-family: "Inter", system-ui, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
   .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
   a { color: inherit; text-decoration: none; }
-  .grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .grad-text { background: linear-gradient(120deg, var(--brand), var(--brand-2) 45%, #a855f7 70%, var(--brand)); background-size: 220% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 7s linear infinite; }
+  @keyframes shimmer { to { background-position: 220% center; } }
 
   .btn { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; padding: 12px 22px; border-radius: 12px; cursor: pointer; transition: transform .15s, box-shadow .15s, background .15s; border: 1px solid transparent; white-space: nowrap; }
   .btn-primary { background: var(--grad); color: #fff; box-shadow: 0 8px 20px -8px rgba(79,70,229,0.6); }
@@ -40,6 +41,9 @@
   .btn-ghost { background: #fff; color: var(--ink); border-color: var(--line); box-shadow: var(--shadow-sm); }
   .btn-ghost:hover { border-color: #cdd5e3; transform: translateY(-1px); }
   .btn-lg { padding: 15px 28px; font-size: 16px; border-radius: 14px; }
+  .btn-primary { position: relative; overflow: hidden; }
+  .btn-primary::after { content: ""; position: absolute; top: 0; left: -120%; width: 60%; height: 100%; background: linear-gradient(110deg, transparent, rgba(255,255,255,0.45), transparent); transform: skewX(-20deg); transition: left .6s ease; }
+  .btn-primary:hover::after { left: 140%; }
 
   /* NAV */
   nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
@@ -67,8 +71,9 @@
   .hero-note .check { color: var(--green); font-weight: 800; }
 
   /* hero mockup — invoice card */
-  .mock { position: relative; }
-  .invoice { background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow-lg); padding: 26px; transform: rotate(-1.2deg); }
+  .mock { position: relative; transform: translate(var(--px, 0px), var(--py, 0px)); transition: transform .25s cubic-bezier(.2,.7,.2,1); }
+  .invoice { background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow-lg); padding: 26px; transform: rotate(-1.2deg); animation: floaty 6.5s ease-in-out infinite; }
+  @keyframes floaty { 0%, 100% { transform: rotate(-1.2deg) translateY(0); } 50% { transform: rotate(-1.2deg) translateY(-12px); } }
   .invoice .ihead { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; }
   .invoice .ifrom { font-size: 13px; color: var(--muted); }
   .invoice .ifrom strong { display: block; color: var(--ink); font-size: 16px; font-weight: 700; margin-bottom: 2px; }
@@ -86,10 +91,11 @@
   .float .fi { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-size: 18px; }
   .float .ft { font-size: 12px; color: var(--muted); }
   .float .fv { font-size: 15px; font-weight: 700; }
-  .float.f1 { top: -22px; right: -14px; }
+  .float.f1 { top: -22px; right: -14px; animation: bob 4.5s ease-in-out infinite; }
   .float.f1 .fi { background: #eef0ff; }
-  .float.f2 { bottom: -24px; left: -18px; }
+  .float.f2 { bottom: -24px; left: -18px; animation: bob 4.5s ease-in-out infinite 1.6s; }
   .float.f2 .fi { background: #e9f9ef; }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
   @media (max-width: 480px) { .float { display: none; } }
 
   /* TRUST BAR */
@@ -177,6 +183,15 @@
 
   .reveal { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s ease; }
   .reveal.in { opacity: 1; transform: none; }
+  /* directional, staggered reveals */
+  [data-anim] { opacity: 0; transition: opacity .75s cubic-bezier(.2,.7,.2,1), transform .75s cubic-bezier(.2,.7,.2,1), filter .75s ease; transition-delay: var(--d, 0s); will-change: opacity, transform; }
+  [data-anim="up"] { transform: translateY(38px); }
+  [data-anim="left"] { transform: translateX(-46px); }
+  [data-anim="right"] { transform: translateX(46px); }
+  [data-anim="scale"] { transform: scale(.9); }
+  [data-anim="blur"] { transform: translateY(24px); filter: blur(10px); }
+  [data-anim].in { opacity: 1; transform: none; filter: none; }
+  @media (prefers-reduced-motion: reduce) { [data-anim], .reveal { opacity: 1 !important; transform: none !important; filter: none !important; } .invoice, .float, .grad-text { animation: none !important; } }
 </style>
 </head>
 <body>
@@ -201,7 +216,7 @@
   <header>
     <div class="wrap">
       <div class="hero">
-        <div class="hero-copy">
+        <div class="hero-copy" data-anim="left">
           <div class="eyebrow"><span class="dot"></span> Invoicing for freelancers</div>
           <h1>Get paid faster.<br /><span class="grad-text">Invoicing made simple.</span></h1>
           <p class="sub">Create professional invoices in seconds, send automatic reminders, and watch the payments roll in — without the awkward follow-ups.</p>
@@ -211,7 +226,8 @@
           </div>
           <div class="hero-note"><span class="check">✓</span> Free forever for your first 3 clients</div>
         </div>
-        <div class="mock">
+        <div class="mock-reveal" data-anim="right">
+          <div class="mock">
           <div class="invoice">
             <div class="ihead">
               <div class="ifrom"><strong>Invoice #0042</strong>to Northwind Studio</div>
@@ -223,10 +239,11 @@
               <div class="line"><span class="desc">Landing page build</span><span class="amt">$1,200</span></div>
               <div class="line"><span class="desc">Revisions (2 rounds)</span><span class="amt">$400</span></div>
             </div>
-            <div class="itotal"><span class="tl">Total paid</span><span class="tv">$3,400</span></div>
+            <div class="itotal"><span class="tl">Total paid</span><span class="tv" data-count="3400" data-prefix="$">$3,400</span></div>
           </div>
           <div class="float f1"><div class="fi">⚡</div><div><div class="ft">Sent in</div><div class="fv">12 seconds</div></div></div>
           <div class="float f2"><div class="fi">💸</div><div><div class="ft">Paid in</div><div class="fv">2 days</div></div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -245,23 +262,23 @@
   <!-- FEATURES -->
   <section id="features">
     <div class="wrap">
-      <div class="shead reveal">
+      <div class="shead" data-anim="up">
         <div class="tag">Features</div>
         <h2>Everything you need to get paid</h2>
         <p>No bloat, no accounting degree required. Just the tools that move money to your account.</p>
       </div>
-      <div class="features">
-        <div class="feat reveal">
+      <div class="features" data-stagger>
+        <div class="feat" data-anim="up">
           <div class="fico">📝</div>
           <h3>Invoices in seconds</h3>
           <p>Pick a client, add line items, hit send. Beautiful branded invoices without the spreadsheet wrestling.</p>
         </div>
-        <div class="feat reveal">
+        <div class="feat" data-anim="up">
           <div class="fico">🔔</div>
           <h3>Automatic reminders</h3>
           <p>Settle politely nudges late clients for you — so you never have to send that awkward "just following up" email again.</p>
         </div>
-        <div class="feat reveal">
+        <div class="feat" data-anim="up">
           <div class="fico">📊</div>
           <h3>Know where you stand</h3>
           <p>See what's paid, pending, and overdue at a glance. Real numbers on your income, updated in real time.</p>
@@ -273,14 +290,14 @@
   <!-- HOW IT WORKS -->
   <section id="how" style="padding-top:0;">
     <div class="wrap">
-      <div class="shead reveal">
+      <div class="shead" data-anim="up">
         <div class="tag">How it works</div>
         <h2>From idea to paid in three steps</h2>
       </div>
-      <div class="steps">
-        <div class="step reveal"><div class="n">1</div><h3>Add your client</h3><p>Drop in their name and email once. Settle remembers them for next time.</p></div>
-        <div class="step reveal"><div class="n">2</div><h3>Build the invoice</h3><p>Add line items, set a due date, and preview a clean branded invoice instantly.</p></div>
-        <div class="step reveal"><div class="n">3</div><h3>Get paid</h3><p>Send it, and let automatic reminders do the chasing. Money lands, you keep creating.</p></div>
+      <div class="steps" data-stagger>
+        <div class="step" data-anim="up"><div class="n">1</div><h3>Add your client</h3><p>Drop in their name and email once. Settle remembers them for next time.</p></div>
+        <div class="step" data-anim="up"><div class="n">2</div><h3>Build the invoice</h3><p>Add line items, set a due date, and preview a clean branded invoice instantly.</p></div>
+        <div class="step" data-anim="up"><div class="n">3</div><h3>Get paid</h3><p>Send it, and let automatic reminders do the chasing. Money lands, you keep creating.</p></div>
       </div>
     </div>
   </section>
@@ -288,13 +305,13 @@
   <!-- PRICING -->
   <section id="pricing">
     <div class="wrap">
-      <div class="shead reveal">
+      <div class="shead" data-anim="up">
         <div class="tag">Pricing</div>
         <h2>Simple pricing that scales with you</h2>
         <p>Start free. Upgrade when the invoices start stacking up.</p>
       </div>
-      <div class="plans">
-        <div class="plan reveal">
+      <div class="plans" data-stagger>
+        <div class="plan" data-anim="up">
           <div class="pname">Free</div>
           <div class="pdesc">For getting started</div>
           <div class="price">$0<span>/mo</span></div>
@@ -305,7 +322,7 @@
           </ul>
           <a href="#" class="btn btn-ghost">Start free</a>
         </div>
-        <div class="plan featured reveal">
+        <div class="plan featured" data-anim="up">
           <div class="ribbon">MOST POPULAR</div>
           <div class="pname">Pro</div>
           <div class="pdesc">For working freelancers</div>
@@ -318,7 +335,7 @@
           </ul>
           <a href="#" class="btn btn-primary">Start 14-day trial</a>
         </div>
-        <div class="plan reveal">
+        <div class="plan" data-anim="up">
           <div class="pname">Team</div>
           <div class="pdesc">For small studios</div>
           <div class="price">$29<span>/mo</span></div>
@@ -337,7 +354,7 @@
   <!-- TESTIMONIAL -->
   <section>
     <div class="wrap">
-      <div class="quote reveal">
+      <div class="quote" data-anim="scale">
         <div class="stars">★★★★★</div>
         <blockquote>"I used to dread invoicing — now it takes me 30 seconds and clients actually pay on time. Settle paid for itself in the first week."</blockquote>
         <div class="who">
@@ -351,11 +368,11 @@
   <!-- FAQ -->
   <section id="faq" style="padding-top:0;">
     <div class="wrap">
-      <div class="shead reveal">
+      <div class="shead" data-anim="up">
         <div class="tag">FAQ</div>
         <h2>Questions, answered</h2>
       </div>
-      <div class="faq reveal">
+      <div class="faq" data-anim="up">
         <details open><summary>Do I need a credit card to start?</summary><p>Nope. The Free plan is genuinely free for your first 3 clients — no card, no trial countdown, no surprises.</p></details>
         <details><summary>Can my clients pay through Settle?</summary><p>Yes. Connect Stripe or PayPal and clients can pay straight from the invoice with one click. Funds land in your account, not ours.</p></details>
         <details><summary>What do the automatic reminders look like?</summary><p>Friendly, on-brand emails sent on your schedule before and after the due date. You set the tone; Settle handles the timing.</p></details>
@@ -367,7 +384,7 @@
   <!-- CTA BAND -->
   <section style="padding-top:0;">
     <div class="wrap">
-      <div class="cta-band reveal">
+      <div class="cta-band" data-anim="scale">
         <h2>Stop chasing. Start getting paid.</h2>
         <p>Join thousands of freelancers who send invoices in seconds and get paid in days.</p>
         <a href="#pricing" class="btn btn-white btn-lg">Get started free →</a>
@@ -395,10 +412,59 @@
   </footer>
 
   <script>
+    // staggered children inside [data-stagger] groups
+    document.querySelectorAll("[data-stagger]").forEach((group) => {
+      Array.from(group.children).forEach((child, i) => {
+        if (child.hasAttribute("data-anim")) child.style.setProperty("--d", (i * 0.1) + "s");
+      });
+    });
+
+    // reveal on scroll (handles .reveal and [data-anim])
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    document.querySelectorAll(".reveal").forEach((el, i) => { el.style.transitionDelay = (i % 3) * 0.06 + "s"; io.observe(el); });
+    }, { threshold: 0.14 });
+    document.querySelectorAll(".reveal, [data-anim]").forEach((el) => io.observe(el));
+
+    // count-up for the invoice total
+    const fmt = (n) => "$" + Math.round(n).toLocaleString("en-US");
+    const counters = document.querySelectorAll("[data-count]");
+    const cio = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const el = e.target; cio.unobserve(el);
+        const target = parseFloat(el.getAttribute("data-count"));
+        const dur = 1100; let start = null;
+        const step = (t) => {
+          if (start === null) start = t;
+          const p = Math.min((t - start) / dur, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = fmt(target * eased);
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.6 });
+    counters.forEach((el) => cio.observe(el));
+
+    // parallax on the hero mockup (mouse + scroll)
+    const mock = document.querySelector(".mock");
+    if (mock && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      let mx = 0, my = 0, sy = 0;
+      const apply = () => {
+        mock.style.setProperty("--px", mx + "px");
+        mock.style.setProperty("--py", (my + sy) + "px");
+      };
+      window.addEventListener("mousemove", (ev) => {
+        const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+        mx = ((ev.clientX - cx) / cx) * 10;
+        my = ((ev.clientY - cy) / cy) * 8;
+        apply();
+      });
+      window.addEventListener("scroll", () => {
+        sy = Math.max(-40, Math.min(40, window.scrollY * -0.05));
+        apply();
+      }, { passive: true });
+    }
   </script>
 </body>
 </html>

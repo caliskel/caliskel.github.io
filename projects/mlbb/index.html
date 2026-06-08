@@ -1,107 +1,103 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MLBB Codex — герои, контрпики и предметы</title>
-<meta name="description" content="Справочник по Mobile Legends: Bang Bang — все герои, контрпики, синергия и мета. Данные обновляются из открытого API." />
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<title>MLBB Codex — Heroes of the Land of Dawn</title>
+<meta name="description" content="A Mobile Legends: Bang Bang hero codex. Browse every hero, search, filter by lane and sort by the current meta." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg: #0a0e18;
-    --bg2: #0f1626;
-    --panel: #131b2e;
-    --panel2: #1a2440;
-    --line: rgba(255,255,255,0.08);
-    --gold: #f5c451;
-    --blue: #3b82f6;
-    --green: #2ee6a6;
-    --red: #ff5470;
-    --text: #e6ebf5;
-    --muted: #8a93a8;
-    --disp: "Rajdhani", system-ui, sans-serif;
+    --bg: #07070c;
+    --bg2: #0e0d14;
+    --panel: #141220;
+    --panel2: #1b1830;
+    --line: rgba(232,201,134,0.14);
+    --line-soft: rgba(255,255,255,0.06);
+    --gold: #e8c986;
+    --gold-bright: #f7e3a8;
+    --gold-deep: #b8902f;
+    --grad-gold: linear-gradient(135deg, #f7e3a8, #c79a3a 60%, #8a6a1f);
+    --green: #5fd6a0;
+    --red: #e8728a;
+    --text: #ece7df;
+    --muted: #9a917f;
+    --disp: "Cinzel", "Times New Roman", serif;
     --body: "Inter", system-ui, sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: var(--body); -webkit-font-smoothing: antialiased; line-height: 1.5;
-    background-image: radial-gradient(900px 500px at 80% -10%, rgba(59,130,246,0.12), transparent 60%), radial-gradient(700px 500px at 0% 0%, rgba(245,196,81,0.08), transparent 55%); background-attachment: fixed; }
+  body { background: var(--bg); color: var(--text); font-family: var(--body); -webkit-font-smoothing: antialiased; line-height: 1.5; position: relative; overflow-x: hidden; }
+  /* atmospheric background */
+  body::before { content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    background:
+      radial-gradient(1000px 600px at 50% -15%, rgba(199,154,58,0.16), transparent 60%),
+      radial-gradient(800px 600px at 100% 10%, rgba(120,90,200,0.08), transparent 55%),
+      radial-gradient(900px 700px at 0% 100%, rgba(199,154,58,0.06), transparent 55%); }
+  body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
   a { color: inherit; text-decoration: none; }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 22px; }
+  .gold-text { background: var(--grad-gold); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
   /* HEADER */
-  header.top { position: sticky; top: 0; z-index: 30; background: rgba(10,14,24,0.82); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
-  .top .wrap { display: flex; align-items: center; gap: 18px; height: 66px; }
-  .brand { font-family: var(--disp); font-weight: 700; font-size: 22px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px; }
-  .brand .mk { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--gold), #e0972c); display: grid; place-items: center; color: #1a1205; font-weight: 800; font-family: var(--disp); }
-  .brand b { color: var(--gold); }
-  .brand .sub { font-size: 12px; color: var(--muted); font-weight: 500; font-family: var(--body); }
+  header.top { position: sticky; top: 0; z-index: 30; background: rgba(7,7,12,0.82); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .top .wrap { display: flex; align-items: center; gap: 18px; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand .mk { width: 34px; height: 34px; border-radius: 8px; background: var(--grad-gold); display: grid; place-items: center; color: #1a1205; font-weight: 800; font-family: var(--disp); font-size: 15px; box-shadow: 0 4px 14px -4px rgba(199,154,58,0.6); }
+  .brand .nm { font-family: var(--disp); font-weight: 700; font-size: 20px; letter-spacing: 1.5px; }
+  .brand .sub { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
   .top .spacer { flex: 1; }
-  .credit { font-size: 12px; color: var(--muted); }
+  .credit { font-size: 12px; color: var(--muted); letter-spacing: 0.5px; }
   .credit a { color: var(--gold); }
-  @media (max-width: 640px) { .brand .sub, .credit { display: none; } }
+  @media (max-width: 660px) { .brand .sub, .credit { display: none; } }
+
+  /* HERO TITLE */
+  .titlebar { text-align: center; padding: 56px 0 30px; }
+  .titlebar .orn { display: flex; align-items: center; justify-content: center; gap: 18px; }
+  .titlebar .orn .ln { height: 1px; width: min(160px, 22vw); background: linear-gradient(90deg, transparent, var(--gold-deep)); }
+  .titlebar .orn .ln.r { background: linear-gradient(90deg, var(--gold-deep), transparent); }
+  .titlebar .orn .dm { color: var(--gold); font-size: 13px; }
+  h1.maintitle { font-family: var(--disp); font-weight: 800; font-size: clamp(38px, 7vw, 76px); letter-spacing: clamp(4px, 1.4vw, 14px); margin: 14px 0 12px; }
+  .titlebar p { color: var(--muted); font-size: 15px; max-width: 540px; margin: 0 auto; }
 
   /* CONTROLS */
-  .controls { padding: 26px 0 16px; }
-  .ctitle { font-family: var(--disp); font-weight: 700; font-size: clamp(26px, 4vw, 40px); letter-spacing: 0.5px; }
-  .ctitle b { color: var(--gold); }
-  .csub { color: var(--muted); margin-top: 4px; font-size: 14px; }
-  .bar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 20px; }
+  .controls { padding: 8px 0 10px; }
+  .bar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
   .search { position: relative; flex: 1; min-width: 220px; }
-  .search input { width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px 12px 40px; color: var(--text); font-size: 15px; font-family: var(--body); outline: none; transition: border-color .2s, box-shadow .2s; }
-  .search input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,130,246,0.18); }
-  .search::before { content: "⌕"; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 17px; }
-  select.sort { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; color: var(--text); font-size: 14px; font-family: var(--body); outline: none; cursor: pointer; }
-  .roles { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
-  .role-chip { font-family: var(--disp); font-weight: 600; font-size: 14px; letter-spacing: 0.3px; padding: 7px 15px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); cursor: pointer; transition: all .18s; }
-  .role-chip:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
-  .role-chip.on { background: var(--gold); color: #1a1205; border-color: var(--gold); }
-  .count { color: var(--muted); font-size: 13px; margin: 16px 0 6px; }
+  .search input { width: 100%; background: rgba(20,18,32,0.7); border: 1px solid var(--line); border-radius: 10px; padding: 13px 14px 13px 42px; color: var(--text); font-size: 15px; font-family: var(--body); outline: none; transition: border-color .2s, box-shadow .2s; }
+  .search input::placeholder { color: var(--muted); }
+  .search input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(232,201,134,0.14); }
+  .search::before { content: "⌕"; position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 18px; }
+  select.sort { background: rgba(20,18,32,0.7); border: 1px solid var(--line); border-radius: 10px; padding: 13px 14px; color: var(--text); font-size: 14px; font-family: var(--body); outline: none; cursor: pointer; }
+  .roles { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; justify-content: center; }
+  .role-chip { font-family: var(--disp); font-weight: 600; font-size: 13px; letter-spacing: 1.5px; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: rgba(20,18,32,0.5); color: var(--muted); cursor: pointer; transition: all .18s; }
+  .role-chip:hover { color: var(--gold-bright); border-color: rgba(232,201,134,0.4); }
+  .role-chip.on { background: var(--grad-gold); color: #1a1205; border-color: transparent; box-shadow: 0 4px 14px -5px rgba(199,154,58,0.6); }
+  .count { color: var(--muted); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; text-align: center; margin: 22px 0 14px; }
+  .count b { color: var(--gold); }
 
   /* GRID */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; padding-bottom: 60px; }
-  .hero { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: transform .18s, border-color .18s, box-shadow .18s; position: relative; }
-  .hero:hover { transform: translateY(-4px); border-color: rgba(245,196,81,0.5); box-shadow: 0 16px 36px -16px rgba(0,0,0,0.7); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; padding-bottom: 60px; }
+  .hero { background: linear-gradient(180deg, var(--panel), var(--bg2)); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; transition: transform .2s, border-color .2s, box-shadow .2s; position: relative; }
+  .hero::before, .hero::after { content: ""; position: absolute; width: 14px; height: 14px; pointer-events: none; opacity: 0; transition: opacity .2s; z-index: 3; }
+  .hero::before { top: 7px; left: 7px; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+  .hero::after { top: 7px; right: 7px; border-top: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+  .hero:hover { transform: translateY(-5px); border-color: rgba(232,201,134,0.55); box-shadow: 0 18px 40px -18px rgba(0,0,0,0.8), 0 0 24px -8px rgba(199,154,58,0.4); }
+  .hero:hover::before, .hero:hover::after { opacity: 1; }
   .hero .pic { aspect-ratio: 1/1; background: var(--bg2); position: relative; overflow: hidden; }
-  .hero .pic img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
-  .hero:hover .pic img { transform: scale(1.07); }
-  .hero .wr { position: absolute; top: 8px; right: 8px; font-family: var(--disp); font-weight: 700; font-size: 13px; padding: 2px 8px; border-radius: 6px; background: rgba(10,14,24,0.75); border: 1px solid var(--line); }
-  .hero .wr.good { color: var(--green); } .hero .wr.bad { color: var(--red); }
-  .hero .meta { padding: 10px 12px 12px; }
-  .hero .nm { font-family: var(--disp); font-weight: 700; font-size: 17px; letter-spacing: 0.3px; }
-  .hero .rl { font-size: 11px; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .empty { color: var(--muted); padding: 40px 0; text-align: center; }
+  .hero .pic img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s; }
+  .hero:hover .pic img { transform: scale(1.08); }
+  .hero .pic::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(7,7,12,0.85)); }
+  .hero .wr { position: absolute; top: 9px; right: 9px; z-index: 2; font-family: var(--disp); font-weight: 700; font-size: 12px; padding: 3px 8px; border-radius: 6px; background: rgba(7,7,12,0.8); border: 1px solid var(--line); letter-spacing: 0.5px; }
+  .hero .wr.good { color: var(--green); border-color: rgba(95,214,160,0.35); }
+  .hero .wr.bad { color: var(--red); border-color: rgba(232,114,138,0.35); }
+  .hero .nm { position: absolute; left: 0; right: 0; bottom: 30px; z-index: 2; text-align: center; font-family: var(--disp); font-weight: 700; font-size: 16px; letter-spacing: 1px; padding: 0 8px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+  .hero .rl { padding: 0 0 11px; text-align: center; font-size: 10px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; position: relative; z-index: 2; margin-top: -10px; }
+  .empty { color: var(--muted); padding: 50px 0; text-align: center; grid-column: 1/-1; }
 
-  /* MODAL */
-  .overlay { position: fixed; inset: 0; z-index: 60; background: rgba(5,8,15,0.78); backdrop-filter: blur(6px); display: none; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
-  .overlay.open { display: flex; }
-  .modal { width: 100%; max-width: 720px; background: var(--bg2); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; animation: pop .25s cubic-bezier(.2,.8,.2,1); }
-  @keyframes pop { from { opacity: 0; transform: translateY(20px) scale(.98); } to { opacity: 1; transform: none; } }
-  .m-head { display: flex; gap: 18px; padding: 24px; background: linear-gradient(120deg, rgba(245,196,81,0.1), rgba(59,130,246,0.08)); border-bottom: 1px solid var(--line); position: relative; }
-  .m-head .ph { width: 96px; height: 96px; border-radius: 14px; object-fit: cover; border: 1px solid var(--line); flex-shrink: 0; background: var(--panel); }
-  .m-head .hn { font-family: var(--disp); font-weight: 700; font-size: 32px; letter-spacing: 0.5px; }
-  .m-head .roles2 { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-  .m-head .rb { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--panel2); color: var(--text); }
-  .m-stats { display: flex; gap: 18px; margin-top: 12px; }
-  .m-stats .st b { font-family: var(--disp); font-size: 19px; }
-  .m-stats .st span { font-size: 11px; color: var(--muted); display: block; text-transform: uppercase; letter-spacing: 0.5px; }
-  .m-close { position: absolute; top: 16px; right: 18px; width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line); background: rgba(10,14,24,0.6); color: var(--text); font-size: 20px; cursor: pointer; display: grid; place-items: center; }
-  .m-close:hover { border-color: var(--red); color: var(--red); }
-  .m-body { padding: 22px 24px 28px; }
-  .cgroup { margin-bottom: 22px; }
-  .cgroup h4 { font-family: var(--disp); font-weight: 700; font-size: 15px; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-  .cgroup .desc { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-  .cgroup h4 .dot { width: 9px; height: 9px; border-radius: 50%; }
-  .strong h4 { color: var(--green); } .strong .dot { background: var(--green); }
-  .weak h4 { color: var(--red); } .weak .dot { background: var(--red); }
-  .syn h4 { color: var(--gold); } .syn .dot { background: var(--gold); }
-  .clist { display: flex; gap: 12px; flex-wrap: wrap; }
-  .cchip { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; width: 74px; }
-  .cchip img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; border: 1px solid var(--line); transition: transform .18s, border-color .18s; }
-  .cchip:hover img { transform: translateY(-3px); border-color: rgba(245,196,81,0.6); }
-  .cchip span { font-size: 12px; color: var(--muted); text-align: center; line-height: 1.2; }
-  .cnone { font-size: 13px; color: var(--muted); }
-
-  footer { border-top: 1px solid var(--line); padding: 24px 0 40px; color: var(--muted); font-size: 13px; }
+  footer { border-top: 1px solid var(--line); padding: 26px 0 44px; color: var(--muted); font-size: 12px; letter-spacing: 0.5px; }
   footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   footer a { color: var(--gold); }
 </style>
@@ -109,22 +105,29 @@
 <body>
   <header class="top">
     <div class="wrap">
-      <div class="brand"><span class="mk">ML</span> <span>MLBB <b>Codex</b></span> <span class="sub">— герои · контрпики · мета</span></div>
+      <div class="brand">
+        <span class="mk">ML</span>
+        <div><div class="nm gold-text">MLBB CODEX</div><div class="sub">Heroes · Meta · Land of Dawn</div></div>
+      </div>
       <div class="spacer"></div>
-      <div class="credit">проект <a href="https://caliskel.github.io" target="_blank" rel="noopener">caliskel</a></div>
+      <div class="credit">a project by <a href="https://caliskel.github.io" target="_blank" rel="noopener">caliskel</a></div>
     </div>
   </header>
 
+  <div class="wrap titlebar">
+    <div class="orn"><span class="ln"></span><span class="dm">✦</span><span class="ln r"></span></div>
+    <h1 class="maintitle gold-text">HEROES</h1>
+    <p>Browse every hero of the Land of Dawn. Search by name, filter by lane, and sort by the current meta.</p>
+  </div>
+
   <div class="wrap controls">
-    <div class="ctitle">Все <b>герои</b></div>
-    <div class="csub">Каталог всех героев Mobile Legends. Поиск по имени, фильтр по линиям и сортировка по мете.</div>
     <div class="bar">
-      <label class="search"><input id="search" type="text" placeholder="Поиск героя по имени…" autocomplete="off" /></label>
+      <label class="search"><input id="search" type="text" placeholder="Search hero by name…" autocomplete="off" /></label>
       <select class="sort" id="sort">
-        <option value="name">По имени</option>
-        <option value="win">По винрейту</option>
-        <option value="ban">По бан-рейту</option>
-        <option value="pick">По пик-рейту</option>
+        <option value="name">Sort: Name</option>
+        <option value="win">Sort: Win rate</option>
+        <option value="ban">Sort: Ban rate</option>
+        <option value="pick">Sort: Pick rate</option>
       </select>
     </div>
     <div class="roles" id="roles"></div>
@@ -137,37 +140,32 @@
 
   <footer>
     <div class="wrap">
-      <div>Данные: открытый MLBB API + Moonton. Скины — в разработке.</div>
-      <div>© <span id="yr"></span> MLBB Codex · сделал <a href="https://caliskel.github.io" target="_blank" rel="noopener">caliskel</a></div>
+      <div>Data: open MLBB API &amp; Moonton. Skins coming soon.</div>
+      <div>© <span id="yr"></span> MLBB Codex · made by <a href="https://caliskel.github.io" target="_blank" rel="noopener">caliskel</a></div>
     </div>
   </footer>
 
   <script src="./data/heroes.js"></script>
   <script>
     const HEROES = (window.MLBB_HEROES || []).filter(h => h.name);
-    const byId = {}; HEROES.forEach(h => byId[h.id] = h);
     document.getElementById("yr").textContent = new Date().getFullYear();
 
-    const ROLE_RU = { "Exp Lane": "Опыт", "Gold Lane": "Золото", "Jungle": "Лес", "Mid Lane": "Мид", "Roam": "Роум" };
+    const ROLE_EN = { "Exp Lane": "EXP", "Gold Lane": "GOLD", "Jungle": "JUNGLE", "Mid Lane": "MID", "Roam": "ROAM" };
     const ALL_ROLES = ["Exp Lane", "Jungle", "Mid Lane", "Gold Lane", "Roam"];
-
     let q = "", role = "all", sort = "name";
 
-    // build role chips
     const rolesEl = document.getElementById("roles");
     function chip(val, label) { const b = document.createElement("button"); b.className = "role-chip" + (val === role ? " on" : ""); b.textContent = label; b.dataset.role = val; return b; }
     function renderRoles() {
       rolesEl.innerHTML = "";
-      rolesEl.appendChild(chip("all", "Все"));
-      ALL_ROLES.forEach(r => rolesEl.appendChild(chip(r, ROLE_RU[r] || r)));
+      rolesEl.appendChild(chip("all", "ALL"));
+      ALL_ROLES.forEach(r => rolesEl.appendChild(chip(r, ROLE_EN[r] || r)));
     }
     rolesEl.addEventListener("click", (e) => { const b = e.target.closest(".role-chip"); if (!b) return; role = b.dataset.role; renderRoles(); render(); });
-
     document.getElementById("search").addEventListener("input", (e) => { q = e.target.value.trim().toLowerCase(); render(); });
     document.getElementById("sort").addEventListener("change", (e) => { sort = e.target.value; render(); });
 
     function wrClass(w) { return w == null ? "" : (w >= 50 ? "good" : "bad"); }
-    function fmtPct(v) { return v == null ? "—" : v.toFixed(1) + "%"; }
 
     function filtered() {
       let list = HEROES.filter(h => {
@@ -175,25 +173,22 @@
         if (role !== "all" && !(h.roles || []).includes(role)) return false;
         return true;
       });
-      const dir = sort === "name" ? 1 : -1;
-      list.sort((a, b) => {
-        if (sort === "name") return (a.name).localeCompare(b.name);
-        return ((b[sort] ?? -1) - (a[sort] ?? -1));
-      });
+      list.sort((a, b) => sort === "name" ? a.name.localeCompare(b.name) : ((b[sort] ?? -1) - (a[sort] ?? -1)));
       return list;
     }
 
     const grid = document.getElementById("grid");
     function render() {
       const list = filtered();
-      document.getElementById("count").textContent = list.length + " героев";
-      if (!list.length) { grid.innerHTML = '<div class="empty">Ничего не найдено</div>'; return; }
+      document.getElementById("count").innerHTML = "<b>" + list.length + "</b> heroes";
+      if (!list.length) { grid.innerHTML = '<div class="empty">No heroes found</div>'; return; }
       grid.innerHTML = list.map(h => {
-        const roles = (h.roles || []).map(r => ROLE_RU[r] || r).join(" · ");
-        return '<div class="hero" data-id="' + h.id + '">' +
+        const roles = (h.roles || []).map(r => ROLE_EN[r] || r).join(" · ");
+        return '<div class="hero">' +
           '<div class="pic"><img loading="lazy" src="' + h.img + '" alt="' + h.name + '" />' +
-          (h.win != null ? '<span class="wr ' + wrClass(h.win) + '">' + h.win.toFixed(0) + '%</span>' : '') + '</div>' +
-          '<div class="meta"><div class="nm">' + h.name + '</div><div class="rl">' + (roles || '—') + '</div></div></div>';
+          (h.win != null ? '<span class="wr ' + wrClass(h.win) + '">' + h.win.toFixed(0) + '%</span>' : '') +
+          '<div class="nm">' + h.name + '</div></div>' +
+          '<div class="rl">' + (roles || '—') + '</div></div>';
       }).join("");
     }
     renderRoles(); render();

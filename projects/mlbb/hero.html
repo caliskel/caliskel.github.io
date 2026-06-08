@@ -220,9 +220,11 @@
       const r = byId[id] || {};
       const name = d.name || r.name || "Hero";
       document.title = name + " — MLBB Codex";
-      const cls = (d.cls||[]).map(c=>'<span class="tg cls">'+esc(c)+'</span>').join('');
-      const lanes = (d.lanes&&d.lanes.length?d.lanes:(r.roles||[]).map(x=>ROLE_EN[x]||x)).map(l=>'<span class="tg lane">'+esc(l)+'</span>').join('');
-      const spec = (d.specialty||[]).map(s=>'<span class="tg">'+esc(s)+'</span>').join('');
+      const clean = a => (a||[]).map(x=>(x==null?'':(''+x)).trim()).filter(Boolean);
+      const cls = clean(d.cls).map(c=>'<span class="tg cls">'+esc(c)+'</span>').join('');
+      const laneSrc = clean(d.lanes).length ? clean(d.lanes) : clean((r.roles||[]).map(x=>ROLE_EN[x]||x));
+      const lanes = laneSrc.map(l=>'<span class="tg lane">'+esc(l)+'</span>').join('');
+      const spec = clean(d.specialty).map(s=>'<span class="tg">'+esc(s)+'</span>').join('');
 
       const meta = '<div class="meta">' +
         (r.win!=null?'<div class="m"><b class="'+wrCls(r.win)+'">'+pct(r.win)+'</b><span>Win rate</span></div>':'') +

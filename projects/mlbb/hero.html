@@ -10,7 +10,7 @@
 <style>
   :root {
     --bg: #07070c; --bg2: #0e0d14; --panel: #141220; --panel2: #1b1830;
-    --line: rgba(232,201,134,0.14); --gold: #e8c986; --gold-bright: #f7e3a8; --gold-deep: #b8902f;
+    --line: rgba(232,201,134,0.14); --line-soft: rgba(255,255,255,0.07); --gold: #e8c986; --gold-bright: #f7e3a8; --gold-deep: #b8902f;
     --grad-gold: linear-gradient(135deg, #f7e3a8, #c79a3a 60%, #8a6a1f);
     --green: #5fd6a0; --red: #e8728a; --blue: #7aa2ff;
     --text: #ece7df; --muted: #9a917f;
@@ -52,6 +52,7 @@
 
   section.blk { margin-top: 40px; }
   .blk-h { font-family: var(--disp); font-weight: 700; font-size: 22px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+  .blk-h .badge { font-family: var(--body); font-size: 11px; letter-spacing: 1px; color: var(--gold); border: 1px solid var(--line); border-radius: 6px; padding: 3px 9px; text-transform: uppercase; }
   .blk-h::before { content:""; width: 4px; height: 22px; background: var(--grad-gold); border-radius: 2px; }
 
   /* stats */
@@ -73,20 +74,6 @@
   .skill .sd { font-size: 14px; color: #cfc8bb; white-space: pre-line; }
   .skill .sd span { font-weight: 600; }
 
-  /* counters */
-  .cgrid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-  @media (max-width: 720px){ .cgrid { grid-template-columns: 1fr; } }
-  .cbox { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
-  .cbox h4 { font-family: var(--disp); font-weight: 700; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
-  .cbox .d { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
-  .cbox.s h4 { color: var(--green); } .cbox.w h4 { color: var(--red); } .cbox.y h4 { color: var(--gold); }
-  .clist { display: flex; gap: 12px; flex-wrap: wrap; }
-  .cc { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 66px; }
-  .cc img { width: 56px; height: 56px; border-radius: 11px; object-fit: cover; border: 1px solid var(--line); transition: transform .18s, border-color .18s; }
-  .cc:hover img { transform: translateY(-3px); border-color: rgba(232,201,134,0.6); }
-  .cc span { font-size: 11px; color: var(--muted); text-align: center; line-height: 1.2; }
-  .cnone { font-size: 13px; color: var(--muted); }
-
   /* skins */
   .skins { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 14px; }
   .skin { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform .18s, border-color .18s, box-shadow .18s; }
@@ -103,12 +90,16 @@
   .lb .x:hover { border-color: var(--gold); color: var(--gold); }
   .lb .hint { position: absolute; top: 24px; left: 24px; font-size: 12px; color: var(--muted); letter-spacing: 0.5px; }
 
-  /* build */
+  /* build cards (read-only) */
   .build { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; margin-bottom: 14px; }
   .build .bhead { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line-soft); }
-  .bidx { font-family: var(--disp); font-weight: 700; letter-spacing: 1.5px; font-size: 13px; color: var(--gold); }
-  .spellp { margin-left: auto; display: inline-flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 600; }
+  .bidx { font-family: var(--disp); font-weight: 700; letter-spacing: 1px; font-size: 16px; color: var(--gold); }
+  .spellp { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 600; }
   .spellp img { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); object-fit: cover; }
+  .bld-ctrls { margin-left: auto; display: flex; gap: 8px; }
+  .mini { font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 7px; border: 1px solid var(--line); background: var(--panel2); color: var(--text); cursor: pointer; }
+  .mini:hover { border-color: var(--gold); color: var(--gold); }
+  .mini.del:hover { border-color: var(--red); color: var(--red); }
   .build .seg { margin-bottom: 18px; } .build .seg:last-child { margin-bottom: 0; }
   .build .seg .t { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
   .items { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -124,6 +115,45 @@
   .tal { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 70px; }
   .tal img { width: 48px; height: 48px; border-radius: 10px; border: 1px solid var(--line); object-fit: cover; }
   .tal span { font-size: 10px; color: var(--muted); text-align: center; line-height: 1.15; }
+  .cnone { font-size: 13px; color: var(--muted); padding: 4px 0 8px; }
+
+  /* CONSTRUCTOR (edit mode) */
+  .editor { background: var(--panel); border: 1px solid rgba(232,201,134,0.3); border-radius: 14px; padding: 22px; margin-top: 18px; }
+  .ed-head { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+  .name-input { flex: 1; min-width: 200px; background: var(--bg2); border: 1px solid var(--line); border-radius: 9px; padding: 10px 13px; color: var(--text); font-family: var(--body); font-size: 14px; outline: none; }
+  .name-input:focus { border-color: var(--gold); }
+  .ed-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn { font-size: 13px; font-weight: 600; padding: 9px 15px; border-radius: 9px; border: 1px solid var(--line); background: var(--panel2); color: var(--text); cursor: pointer; transition: all .15s; }
+  .btn:hover { border-color: var(--gold); }
+  .btn-gold { background: var(--grad-gold); color: #1a1205; border-color: transparent; }
+  .btn-gold:hover { filter: brightness(1.07); }
+  .ed-slots { display: flex; gap: 30px; flex-wrap: wrap; margin-bottom: 22px; }
+  .slot-group .t { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .slots { display: flex; gap: 10px; flex-wrap: wrap; }
+  .slot { position: relative; width: 54px; height: 54px; border: 1.5px dashed rgba(255,255,255,0.18); border-radius: 10px; display: grid; place-items: center; cursor: pointer; background: var(--bg2); transition: border-color .15s; margin-bottom: 16px; }
+  .slot:hover { border-color: var(--gold); }
+  .slot.filled { border-style: solid; border-color: var(--line); }
+  .slot img { width: 100%; height: 100%; object-fit: cover; border-radius: 9px; }
+  .slot .plus { color: var(--muted); font-size: 22px; font-weight: 300; }
+  .slot .slbl { position: absolute; bottom: -15px; left: -4px; right: -4px; text-align: center; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .slot.filled .slbl { color: var(--gold-deep); }
+
+  .lib { border-top: 1px solid var(--line-soft); padding-top: 18px; }
+  .lib-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .lib-tab { font-size: 13px; font-weight: 600; padding: 7px 15px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; }
+  .lib-tab:hover { color: var(--gold-bright); }
+  .lib-tab.on { background: var(--grad-gold); color: #1a1205; border-color: transparent; }
+  .lib-search { width: 100%; background: var(--bg2); border: 1px solid var(--line); border-radius: 9px; padding: 9px 13px; color: var(--text); font-family: var(--body); font-size: 13px; outline: none; margin-bottom: 12px; }
+  .lib-search:focus { border-color: var(--gold); }
+  .lib-tier { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin: 10px 0 8px; }
+  .lib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 8px; max-height: 320px; overflow-y: auto; padding: 2px 4px 2px 0; }
+  .lib-item { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 8px 4px; background: var(--bg2); border: 1px solid var(--line-soft); border-radius: 9px; cursor: pointer; color: var(--text); transition: border-color .12s, transform .12s; }
+  .lib-item:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .lib-item img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+  .lib-item span { font-size: 9.5px; color: var(--muted); text-align: center; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  .toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--panel2); border: 1px solid var(--gold); color: var(--gold-bright); padding: 11px 22px; border-radius: 10px; font-size: 13px; font-weight: 600; opacity: 0; pointer-events: none; transition: all .25s; z-index: 200; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   .story { color: var(--muted); font-size: 15px; font-style: italic; max-width: 720px; }
   .loading, .errbox { text-align: center; color: var(--muted); padding: 80px 0; }
@@ -144,6 +174,7 @@
   <footer>Data: open MLBB API &amp; Moonton · made by <a href="https://caliskel.github.io" target="_blank" rel="noopener">caliskel</a></footer>
 
   <div class="lb" id="lb"><span class="hint">click outside or Esc to close</span><button class="x" id="lbx" aria-label="Close">×</button><img id="lbimg" alt="" /><div class="cap" id="lbcap"></div></div>
+  <div class="toast" id="toast"></div>
 
   <script src="./data/heroes.js"></script>
   <script>
@@ -151,20 +182,38 @@
     const byId = {}; ROSTER.forEach(h => byId[h.id] = h);
     const ROLE_EN = { "Exp Lane":"EXP","Gold Lane":"GOLD","Jungle":"JUNGLE","Mid Lane":"MID","Roam":"ROAM" };
     const STAT_LABELS = ["Durability","Offense","Ability Effects","Difficulty"];
-    const id = +(new URLSearchParams(location.search).get("id"));
+    const params = new URLSearchParams(location.search);
+    const id = +(params.get("id"));
+    const EDIT = params.has("edit");
     const root = document.getElementById("root");
 
-    function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+    function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
     function wrCls(w){ return w==null?"":(w>=50?"good":"bad"); }
     function pct(v){ return v==null?"—":v.toFixed(1)+"%"; }
 
-    function counters(ids){
-      const valid=(ids||[]).filter(i=>i&&byId[i]);
-      if(!valid.length) return '<div class="cnone">no data</div>';
-      return '<div class="clist">'+valid.map(i=>{const h=byId[i];
-        return '<a class="cc" href="./hero.html?id='+i+'&v=11"><img loading="lazy" src="'+h.img+'"/><span>'+esc(h.name)+'</span></a>';}).join('')+'</div>';
+    /* ---------- catalog + lookups ---------- */
+    let CATALOG=null, DETAIL=null;
+    const M = { item:{}, spell:{}, talent:{}, emblem:{} };
+    function buildMaps(){
+      if(!CATALOG) return;
+      (CATALOG.items||[]).forEach(x=>M.item[x.id]=x);
+      (CATALOG.spells||[]).forEach(x=>M.spell[x.id]=x);
+      (CATALOG.talents||[]).forEach(x=>M.talent[x.id]=x);
+      (CATALOG.emblems||[]).forEach(x=>M.emblem[x.name]=x);
     }
 
+    /* ---------- builds storage ---------- */
+    const LS="mlbb_builds_v1";
+    function allBuilds(){ try{ return JSON.parse(localStorage.getItem(LS))||{}; }catch(e){ return {}; } }
+    function getBuilds(hid){ return allBuilds()[hid] || []; }
+    function setBuilds(hid, arr){ const a=allBuilds(); if(arr&&arr.length) a[hid]=arr; else delete a[hid]; localStorage.setItem(LS, JSON.stringify(a)); }
+
+    let editing = newEditing();
+    function newEditing(){ return { name:"", items:[null,null,null,null,null,null], spell:null, emblem:null, talents:[null,null,null], editIndex:null, libTab:"items", libQ:"" }; }
+
+    function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),1800); }
+
+    /* ---------- page render ---------- */
     function render(d){
       const r = byId[id] || {};
       const name = d.name || r.name || "Hero";
@@ -191,35 +240,9 @@
           '<div style="flex:1"><div class="sh"><span class="sn">'+esc(s.name)+'</span><span class="st">'+slot(i,arr.length)+'</span>'+abilityTags(s.tag)+(s.cdcost?'<span class="cd">'+esc(s.cdcost)+'</span>':'')+'</div><div class="sd">'+(s.desc||'')+'</div></div></div>').join('') +
         '</section>' : '';
 
-      const ctr = '<section class="blk"><div class="blk-h">Strong / Weak / Synergy</div><div class="cgrid">' +
-        '<div class="cbox s"><h4>Strong against</h4><div class="d">'+name+' beats these heroes</div>'+counters(r.strong)+'</div>' +
-        '<div class="cbox w"><h4>Countered by</h4><div class="d">Pick these against '+name+'</div>'+counters(r.weak)+'</div>' +
-        '<div class="cbox y"><h4>Synergy</h4><div class="d">Pairs well with</div>'+counters(r.assist)+'</div>' +
-        '</div></section>';
-
-      const fb = (d.fullbuilds && d.fullbuilds.length) ? d.fullbuilds : null;
-      let build='';
-      if(fb){
-        build='<section class="blk"><div class="blk-h">Recommended builds</div>' +
-        fb.map((b,idx)=>{
-          const items=(b.items||[]).filter(x=>x&&x.icon).map((x,i)=>'<div class="it"><span class="ord">'+(i+1)+'</span><img loading="lazy" src="'+x.icon+'"/><span>'+esc(x.name)+'</span></div>').join('');
-          const talents=(b.talents||[]).slice().sort((a,c)=>(a.tier||0)-(c.tier||0)).map(t=>'<div class="tal"><img src="'+t.icon+'"/><span>'+esc(t.name)+'</span></div>').join('');
-          return '<div class="build">' +
-            '<div class="bhead"><span class="bidx">Build '+(idx+1)+'</span>' +
-              (b.spell&&b.spell.icon?'<span class="spellp"><img src="'+b.spell.icon+'"/>'+esc(b.spell.name||'Spell')+'</span>':'') + '</div>' +
-            (items?'<div class="seg"><div class="t">Items · 6</div><div class="items">'+items+'</div></div>':'') +
-            '<div class="seg embrow">' +
-              (b.emblem&&b.emblem.icon?'<div class="emain"><img src="'+b.emblem.icon+'"/><div><div class="t" style="margin:0">Emblem</div><div class="emn">'+esc(b.emblem.name||'Emblem')+'</div></div></div>':'') +
-              (talents?'<div class="taltrack"><div class="t">Talents · 3</div><div class="talents">'+talents+'</div></div>':'') +
-            '</div>' +
-          '</div>';
-        }).join('') +
-        '</section>';
-      }
-
       const story = d.story? '<section class="blk"><div class="blk-h">Lore</div><p class="story">'+esc(d.story)+'</p></section>' : '';
 
-      const skins = (d.skins && d.skins.length) ? '<section class="blk"><div class="blk-h">Skins · '+d.skins.length+'</div><div class="skins">' +
+      const skins = (d.skins && d.skins.length) ? '<section class="blk"><div class="blk-h">Skins <span class="badge">'+d.skins.length+'</span></div><div class="skins">' +
         d.skins.filter(s=>s&&s.img).map(s=>{ var full=s.full ? s.full : (s.img||'').replace(/\/scale-to-width-down\/\d+/,''); var nm=esc(s.name||'Skin');
           return '<div class="skin" data-full="'+full+'" data-name="'+nm+'"><div class="sp" style="background-image:url(\''+s.img+'\')"></div><div class="snm">'+nm+'</div></div>'; }).join('') +
         '</div></section>' : '';
@@ -229,10 +252,145 @@
           '<div class="portrait" style="background-image:url(\''+(d.splash||r.img)+'\')"></div>' +
           '<div class="scrim"></div>' +
           '<div class="info"><div class="info-txt"><h1 class="gold-text">'+esc(name)+'</h1><div class="tags">'+cls+lanes+spec+'</div>'+meta+'</div></div></div>' +
-        stats + skins + skills + ctr + build + story;
+        stats + skins + skills +
+        '<section class="blk"><div class="blk-h">Builds'+(EDIT?' <span class="badge">editor</span>':'')+'</div><div id="buildsArea"></div></section>' +
+        story;
+
+      renderBuilds();
     }
 
-    // lightbox for skins (full-quality image)
+    /* ---------- builds rendering ---------- */
+    function buildCard(b, i){
+      const items=(b.items||[]).map((iid,idx)=>{const o=M.item[iid]; return o?'<div class="it"><span class="ord">'+(idx+1)+'</span><img loading="lazy" src="'+o.icon+'"/><span>'+esc(o.name)+'</span></div>':'';}).join('');
+      const sp=M.spell[b.spell];
+      const em=M.emblem[b.emblem];
+      const tals=(b.talents||[]).map(tid=>M.talent[tid]).filter(Boolean).sort((a,c)=>(a.tier||0)-(c.tier||0)).map(t=>'<div class="tal"><img src="'+t.icon+'"/><span>'+esc(t.name)+'</span></div>').join('');
+      const ctrls = EDIT? '<span class="bld-ctrls"><button class="mini" data-act="edit" data-i="'+i+'">Edit</button><button class="mini del" data-act="del" data-i="'+i+'">Delete</button></span>':'';
+      return '<div class="build">' +
+        '<div class="bhead"><span class="bidx">'+esc(b.name||('Build '+(i+1)))+'</span>' +
+          (sp?'<span class="spellp"><img src="'+sp.icon+'"/>'+esc(sp.name)+'</span>':'') + ctrls + '</div>' +
+        (items?'<div class="seg"><div class="t">Items</div><div class="items">'+items+'</div></div>':'') +
+        ((em||tals)?'<div class="seg embrow">' +
+          (em?'<div class="emain"><img src="'+em.icon+'"/><div><div class="t" style="margin:0">Emblem</div><div class="emn">'+esc(em.name)+'</div></div></div>':'') +
+          (tals?'<div class="taltrack"><div class="t">Talents</div><div class="talents">'+tals+'</div></div>':'') +
+        '</div>':'') +
+      '</div>';
+    }
+
+    function slotBox(kind, i, obj, label){
+      const inner = obj? '<img src="'+obj.icon+'"/>' : '<span class="plus">+</span>';
+      const cls = obj? 'slot filled':'slot';
+      const title = obj? esc(obj.name)+' — click to clear' : (label||'empty');
+      return '<div class="'+cls+'" data-slot="'+kind+'"'+(i!=null?' data-i="'+i+'"':'')+' title="'+title+'">'+inner+(label?'<span class="slbl">'+label+'</span>':'')+'</div>';
+    }
+
+    function editorHTML(){
+      const e=editing;
+      const itemSlots=e.items.map((iid,i)=>slotBox('item',i,M.item[iid],'')).join('');
+      const spellSlot=slotBox('spell',null,M.spell[e.spell],'Spell');
+      const emblemSlot=slotBox('emblem',null,M.emblem[e.emblem],'Emblem');
+      const talSlots=[0,1,2].map(i=>slotBox('talent',i,M.talent[e.talents[i]],'T'+(i+1))).join('');
+      const tab=e.libTab||'items';
+      let lib='';
+      if(tab==='items'){
+        lib='<input class="lib-search" id="libsearch" placeholder="Search '+CATALOG.items.length+' items…" value="'+esc(e.libQ||'')+'"/>'+
+          '<div class="lib-grid">'+CATALOG.items.map(x=>'<button class="lib-item" data-add="item" data-id="'+x.id+'"><img loading="lazy" src="'+x.icon+'"/><span>'+esc(x.name)+'</span></button>').join('')+'</div>';
+      } else if(tab==='spells'){
+        lib='<div class="lib-grid">'+CATALOG.spells.map(x=>'<button class="lib-item" data-add="spell" data-id="'+x.id+'"><img src="'+x.icon+'"/><span>'+esc(x.name)+'</span></button>').join('')+'</div>';
+      } else if(tab==='emblems'){
+        lib='<div class="lib-grid">'+CATALOG.emblems.map(x=>'<button class="lib-item" data-add="emblem" data-name="'+esc(x.name)+'"><img src="'+x.icon+'"/><span>'+esc(x.name)+'</span></button>').join('')+'</div>';
+      } else {
+        lib=[1,2,3].map(tr=>'<div class="lib-tier">Tier '+tr+'</div><div class="lib-grid">'+CATALOG.talents.filter(t=>t.tier===tr).map(x=>'<button class="lib-item" data-add="talent" data-id="'+x.id+'"><img src="'+x.icon+'"/><span>'+esc(x.name)+'</span></button>').join('')+'</div>').join('');
+      }
+      const tb=(k,l)=>'<button class="lib-tab'+(tab===k?' on':'')+'" data-tab="'+k+'">'+l+'</button>';
+      return '<div class="editor">' +
+        '<div class="ed-head"><input class="name-input" id="bname" placeholder="Build name (e.g. Burst, Tanky, Lane)" value="'+esc(e.name||'')+'"/>' +
+          '<div class="ed-actions">' +
+            '<button class="btn btn-gold" data-act="save">'+(e.editIndex!=null?'Update build':'Save build')+'</button>' +
+            '<button class="btn" data-act="clear">New / clear</button>' +
+            '<button class="btn" data-act="export">Export JSON</button>' +
+          '</div></div>' +
+        '<div class="ed-slots">' +
+          '<div class="slot-group"><div class="t">Items · 6</div><div class="slots">'+itemSlots+'</div></div>' +
+          '<div class="slot-group"><div class="t">Spell · Emblem · Talents</div><div class="slots">'+spellSlot+emblemSlot+talSlots+'</div></div>' +
+        '</div>' +
+        '<div class="lib"><div class="lib-tabs">'+tb('items','Items')+tb('spells','Spells')+tb('emblems','Emblems')+tb('talents','Talents')+'</div>'+lib+'</div>' +
+      '</div>';
+    }
+
+    function renderBuilds(){
+      const area=document.getElementById("buildsArea"); if(!area) return;
+      if(!CATALOG){ area.innerHTML='<div class="cnone">Loading catalog…</div>'; return; }
+      const list = EDIT ? getBuilds(id) : ((DETAIL&&DETAIL.builds)||[]);
+      let html='';
+      if(list.length){ html += list.map((b,i)=>buildCard(b,i)).join(''); }
+      else { html += '<div class="cnone">'+(EDIT?'No builds yet — assemble one below and Save.':'No builds yet.')+'</div>'; }
+      if(EDIT){ html += editorHTML(); }
+      area.innerHTML=html;
+      // re-apply current search filter without re-render
+      if(EDIT && editing.libTab==='items' && editing.libQ){
+        const q=editing.libQ.trim().toLowerCase();
+        area.querySelectorAll('.lib-grid .lib-item').forEach(b=>{ const n=b.querySelector('span').textContent.toLowerCase(); b.style.display=n.includes(q)?'':'none'; });
+      }
+    }
+
+    /* ---------- editing actions ---------- */
+    function addToBuild(kind, ds){
+      if(kind==='item'){ const i=editing.items.indexOf(null); if(i>=0) editing.items[i]=+ds.id; else editing.items[5]=+ds.id; }
+      else if(kind==='spell'){ editing.spell=+ds.id; }
+      else if(kind==='emblem'){ editing.emblem=ds.name; }
+      else if(kind==='talent'){ const t=M.talent[+ds.id]; if(t) editing.talents[(t.tier||1)-1]=+ds.id; }
+    }
+    function clearSlot(kind, i){
+      if(kind==='item') editing.items[+i]=null;
+      else if(kind==='spell') editing.spell=null;
+      else if(kind==='emblem') editing.emblem=null;
+      else if(kind==='talent') editing.talents[+i]=null;
+    }
+    function saveBuild(){
+      const arr=getBuilds(id);
+      const hasAny = editing.items.some(Boolean)||editing.spell||editing.emblem||editing.talents.some(Boolean);
+      if(!hasAny){ toast('Build is empty'); return; }
+      const b={ name: (editing.name||'').trim()||('Build '+(arr.length+1)), items: editing.items.slice(), spell: editing.spell, emblem: editing.emblem, talents: editing.talents.slice() };
+      if(editing.editIndex!=null && arr[editing.editIndex]) arr[editing.editIndex]=b; else arr.push(b);
+      setBuilds(id, arr);
+      const tab=editing.libTab; editing=newEditing(); editing.libTab=tab;
+      renderBuilds(); toast('Saved');
+    }
+    function loadForEdit(i){
+      const b=getBuilds(id)[i]; if(!b) return;
+      editing={ name:b.name||'', items:(b.items||[]).concat([null,null,null,null,null,null]).slice(0,6),
+        spell:(b.spell??null), emblem:(b.emblem??null), talents:(b.talents||[]).concat([null,null,null]).slice(0,3),
+        editIndex:i, libTab:editing.libTab||'items', libQ:'' };
+      renderBuilds();
+      document.querySelector('.editor') && document.querySelector('.editor').scrollIntoView({behavior:'smooth', block:'center'});
+    }
+    function delBuild(i){ const arr=getBuilds(id); arr.splice(i,1); setBuilds(id, arr); if(editing.editIndex===i) editing=newEditing(); renderBuilds(); }
+    function exportJSON(){
+      const data=JSON.stringify(allBuilds(), null, 2);
+      if(navigator.clipboard) navigator.clipboard.writeText(data).catch(()=>{});
+      try{ const blob=new Blob([data],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='mlbb-builds.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);}catch(e){}
+      toast('Exported — file + clipboard');
+    }
+
+    /* ---------- delegated events (bound once) ---------- */
+    document.addEventListener('click', (e)=>{
+      const tab=e.target.closest('.lib-tab'); if(tab){ editing.libTab=tab.dataset.tab; renderBuilds(); return; }
+      const add=e.target.closest('[data-add]'); if(add){ addToBuild(add.dataset.add, add.dataset); renderBuilds(); return; }
+      const sl=e.target.closest('.slot.filled'); if(sl){ clearSlot(sl.dataset.slot, sl.dataset.i); renderBuilds(); return; }
+      const act=e.target.closest('[data-act]'); if(act){ const a=act.dataset.act;
+        if(a==='save') saveBuild(); else if(a==='clear'){ editing=newEditing(); renderBuilds(); }
+        else if(a==='edit') loadForEdit(+act.dataset.i); else if(a==='del') delBuild(+act.dataset.i);
+        else if(a==='export') exportJSON();
+        return; }
+    });
+    document.addEventListener('input', (e)=>{
+      if(e.target.id==='bname'){ editing.name=e.target.value; }
+      else if(e.target.id==='libsearch'){ editing.libQ=e.target.value; const q=e.target.value.trim().toLowerCase();
+        document.querySelectorAll('.lib-grid .lib-item').forEach(b=>{ const n=b.querySelector('span').textContent.toLowerCase(); b.style.display=n.includes(q)?'':'none'; }); }
+    });
+
+    /* ---------- lightbox ---------- */
     const lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg'), lbcap=document.getElementById('lbcap');
     function closeLB(){ lb.classList.remove('open'); lbimg.src=''; document.body.style.overflow=''; }
     document.addEventListener('click', (e)=>{ const s=e.target.closest('.skin'); if(s && s.dataset.full){ lbimg.src=s.dataset.full; lbcap.textContent=s.dataset.name||''; lb.classList.add('open'); document.body.style.overflow='hidden'; } });
@@ -240,11 +398,14 @@
     lb.addEventListener('click', (e)=>{ if(e.target===lb || e.target===lbimg) closeLB(); });
     addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLB(); });
 
+    /* ---------- boot ---------- */
     if(!id || !byId[id]){ root.innerHTML='<div class="errbox">Hero not found. <a href="./index.html" style="color:var(--gold)">Back to all heroes ›</a></div>'; }
     else {
-      // basic render from roster first (instant), then enrich with detail
       render({});
-      fetch('./data/heroes/'+id+'.json').then(r=>r.ok?r.json():null).then(d=>{ if(d) render(d); }).catch(()=>{});
+      Promise.all([
+        fetch('./data/heroes/'+id+'.json').then(r=>r.ok?r.json():null).catch(()=>null),
+        fetch('./data/catalog.json').then(r=>r.ok?r.json():null).catch(()=>null)
+      ]).then(([d,cat])=>{ DETAIL=d||{}; CATALOG=cat; buildMaps(); render(DETAIL); });
     }
   </script>
 </body>

@@ -82,8 +82,15 @@
   .cnone { font-size: 13px; color: var(--muted); }
 
   /* build */
-  .build { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
-  .build .brow { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-start; }
+  .build { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; margin-bottom: 14px; }
+  .build .bhead { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line-soft); }
+  .lane-badge { font-family: var(--disp); font-weight: 700; letter-spacing: 1.5px; font-size: 12px; color: var(--blue); border: 1px solid rgba(122,162,255,0.4); border-radius: 6px; padding: 4px 11px; }
+  .bwr { font-size: 13px; color: var(--muted); } .bwr b { font-family: var(--disp); font-size: 22px; color: var(--green); } .bwr i { font-style: normal; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; }
+  .bpr { margin-left: auto; font-size: 12px; color: var(--muted); }
+  .build .brow { display: flex; gap: 36px; flex-wrap: wrap; align-items: flex-start; }
+  .build .emb .pill { align-items: flex-start; }
+  .build .attrs { list-style: none; margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
+  .build .attrs li { font-size: 12px; color: var(--gold); }
   .build .seg .t { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
   .build .pill { display: flex; align-items: center; gap: 10px; }
   .build .pill img { width: 46px; height: 46px; border-radius: 10px; border: 1px solid var(--line); object-fit: cover; }
@@ -165,14 +172,28 @@
         '<div class="cbox y"><h4>Synergy</h4><div class="d">Pairs well with</div>'+counters(r.assist)+'</div>' +
         '</div></section>';
 
+      const blist = (d.builds && d.builds.length) ? d.builds : (d.build ? [d.build] : []);
       let build='';
-      if(d.build){ const b=d.build;
-        const items=(b.items||[]).filter(x=>x&&x.icon).map(x=>'<div class="it"><img loading="lazy" src="'+x.icon+'"/><span>'+esc(x.name)+'</span></div>').join('');
-        build='<section class="blk"><div class="blk-h">Recommended build</div><div class="build"><div class="brow">' +
-          (b.spell&&b.spell.icon?'<div class="seg"><div class="t">Battle spell</div><div class="pill"><img src="'+b.spell.icon+'"/><span class="nm">'+esc(b.spell.name)+'</span></div></div>':'') +
-          (b.emblem&&b.emblem.icon?'<div class="seg"><div class="t">Emblem</div><div class="pill"><img src="'+b.emblem.icon+'"/><span class="nm">'+esc(b.emblem.name||'Emblem')+'</span></div></div>':'') +
-          (b.winRate?'<div class="wr"><b>'+b.winRate.toFixed(1)+'%</b><span>build win rate</span></div>':'') +
-          '</div>'+(items?'<div class="seg" style="margin-top:20px"><div class="t">Core items</div><div class="items">'+items+'</div></div>':'')+'</div></section>';
+      if(blist.length){
+        build='<section class="blk"><div class="blk-h">Recommended builds</div>' +
+        blist.map(b=>{
+          const items=(b.items||[]).filter(x=>x&&x.icon).map(x=>'<div class="it"><img loading="lazy" src="'+x.icon+'"/><span>'+esc(x.name)+'</span></div>').join('');
+          const attrs=((b.emblem&&b.emblem.attrs)||[]).map(a=>'<li>'+esc(a)+'</li>').join('');
+          const embName = b.emblem ? (b.emblem.set || b.emblem.name || 'Emblem') : '';
+          return '<div class="build">' +
+            '<div class="bhead">' +
+              (b.lane?'<span class="lane-badge">'+esc(b.lane)+'</span>':'') +
+              (b.winRate?'<span class="bwr"><b>'+b.winRate.toFixed(1)+'%</b> <i>win</i></span>':'') +
+              (b.pickRate?'<span class="bpr">'+b.pickRate.toFixed(1)+'% pick</span>':'') +
+            '</div>' +
+            '<div class="brow">' +
+              (b.emblem&&b.emblem.icon?'<div class="seg emb"><div class="t">Emblem</div><div class="pill"><img src="'+b.emblem.icon+'"/><div><div class="nm">'+esc(embName)+'</div>'+(attrs?'<ul class="attrs">'+attrs+'</ul>':'')+'</div></div></div>':'') +
+              (b.spell&&b.spell.icon?'<div class="seg"><div class="t">Battle spell</div><div class="pill"><img src="'+b.spell.icon+'"/><span class="nm">'+esc(b.spell.name)+'</span></div></div>':'') +
+            '</div>' +
+            (items?'<div class="seg" style="margin-top:16px"><div class="t">Core items</div><div class="items">'+items+'</div></div>':'') +
+          '</div>';
+        }).join('') +
+        '</section>';
       }
 
       const story = d.story? '<section class="blk"><div class="blk-h">Lore</div><p class="story">'+esc(d.story)+'</p></section>' : '';

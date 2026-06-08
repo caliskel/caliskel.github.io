@@ -59,7 +59,7 @@
 
   /* GRID */
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; padding-bottom: 60px; }
-  .hero { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; cursor: pointer; transition: transform .18s, border-color .18s, box-shadow .18s; position: relative; }
+  .hero { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: transform .18s, border-color .18s, box-shadow .18s; position: relative; }
   .hero:hover { transform: translateY(-4px); border-color: rgba(245,196,81,0.5); box-shadow: 0 16px 36px -16px rgba(0,0,0,0.7); }
   .hero .pic { aspect-ratio: 1/1; background: var(--bg2); position: relative; overflow: hidden; }
   .hero .pic img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
@@ -116,8 +116,8 @@
   </header>
 
   <div class="wrap controls">
-    <div class="ctitle">Все герои и <b>контрпики</b></div>
-    <div class="csub">Кого брать против кого. Нажми на героя, чтобы увидеть, кого он контрит, кто контрит его и с кем синергия.</div>
+    <div class="ctitle">Все <b>герои</b></div>
+    <div class="csub">Каталог всех героев Mobile Legends. Поиск по имени, фильтр по линиям и сортировка по мете.</div>
     <div class="bar">
       <label class="search"><input id="search" type="text" placeholder="Поиск героя по имени…" autocomplete="off" /></label>
       <select class="sort" id="sort">
@@ -141,10 +141,6 @@
       <div>© <span id="yr"></span> MLBB Codex · сделал <a href="https://caliskel.github.io" target="_blank" rel="noopener">caliskel</a></div>
     </div>
   </footer>
-
-  <div class="overlay" id="overlay">
-    <div class="modal" id="modal"></div>
-  </div>
 
   <script src="./data/heroes.js"></script>
   <script>
@@ -200,45 +196,6 @@
           '<div class="meta"><div class="nm">' + h.name + '</div><div class="rl">' + (roles || '—') + '</div></div></div>';
       }).join("");
     }
-    grid.addEventListener("click", (e) => { const c = e.target.closest(".hero"); if (c) openHero(+c.dataset.id); });
-
-    // MODAL
-    const overlay = document.getElementById("overlay"), modal = document.getElementById("modal");
-    function cchips(ids) {
-      const valid = (ids || []).filter(id => id && byId[id]);
-      if (!valid.length) return '<div class="cnone">нет данных</div>';
-      return '<div class="clist">' + valid.map(id => { const h = byId[id];
-        return '<div class="cchip" data-id="' + id + '"><img loading="lazy" src="' + h.img + '" alt="' + h.name + '"/><span>' + h.name + '</span></div>';
-      }).join("") + '</div>';
-    }
-    function openHero(id) {
-      const h = byId[id]; if (!h) return;
-      const roles = (h.roles || []).map(r => '<span class="rb">' + (ROLE_RU[r] || r) + '</span>').join("");
-      modal.innerHTML =
-        '<div class="m-head">' +
-          '<img class="ph" src="' + h.img + '" alt="' + h.name + '"/>' +
-          '<div><div class="hn">' + h.name + '</div><div class="roles2">' + roles + '</div>' +
-            '<div class="m-stats">' +
-              '<div class="st"><b class="' + wrClass(h.win) + '" style="color:' + (h.win >= 50 ? 'var(--green)' : 'var(--red)') + '">' + fmtPct(h.win) + '</b><span>Винрейт</span></div>' +
-              '<div class="st"><b>' + fmtPct(h.ban) + '</b><span>Бан</span></div>' +
-              '<div class="st"><b>' + fmtPct(h.pick) + '</b><span>Пик</span></div>' +
-            '</div>' +
-          '</div>' +
-          '<button class="m-close" id="mClose">×</button>' +
-        '</div>' +
-        '<div class="m-body">' +
-          '<div class="cgroup strong"><h4><span class="dot"></span> Силён против</h4><div class="desc">' + h.name + ' уверенно играет против этих героев</div>' + cchips(h.strong) + '</div>' +
-          '<div class="cgroup weak"><h4><span class="dot"></span> Контрят его</h4><div class="desc">Берите этих героев против ' + h.name + '</div>' + cchips(h.weak) + '</div>' +
-          '<div class="cgroup syn"><h4><span class="dot"></span> Синергия</h4><div class="desc">Хорошо сочетается в команде с</div>' + cchips(h.assist) + '</div>' +
-        '</div>';
-      overlay.classList.add("open"); document.body.style.overflow = "hidden";
-      document.getElementById("mClose").addEventListener("click", closeModal);
-    }
-    function closeModal() { overlay.classList.remove("open"); document.body.style.overflow = ""; }
-    overlay.addEventListener("click", (e) => { if (e.target === overlay) closeModal(); });
-    modal.addEventListener("click", (e) => { const c = e.target.closest(".cchip"); if (c) openHero(+c.dataset.id); });
-    addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
-
     renderRoles(); render();
   </script>
 </body>

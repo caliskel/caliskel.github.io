@@ -184,7 +184,7 @@
       if (!list.length) { grid.innerHTML = '<div class="empty">No heroes found</div>'; return; }
       grid.innerHTML = list.map(h => {
         const roles = (h.roles || []).map(r => ROLE_EN[r] || r).join(" · ");
-        return '<a class="hero" href="./hero.html?id=' + h.id + '&v=4">' +
+        return '<a class="hero" href="./hero.html?id=' + h.id + '&v=5">' +
           '<div class="pic"><img loading="lazy" src="' + h.img + '" alt="' + h.name + '" />' +
           (h.win != null ? '<span class="wr ' + wrClass(h.win) + '">' + h.win.toFixed(0) + '%</span>' : '') +
           '<div class="nm">' + h.name + '</div></div>' +

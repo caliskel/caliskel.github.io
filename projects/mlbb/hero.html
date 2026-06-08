@@ -31,13 +31,16 @@
   .top .brand { font-family: var(--disp); font-weight: 700; letter-spacing: 1px; margin-left: auto; font-size: 16px; }
 
   /* HERO BANNER */
-  .banner { position: relative; margin-top: 20px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); min-height: 240px; display: flex; align-items: flex-end; }
-  .banner .art { position: absolute; inset: 0; background-size: cover; background-position: top center; filter: brightness(0.62) saturate(1.05); transform: scale(1.04); }
-  .banner .scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,7,12,0.35) 0%, rgba(7,7,12,0.55) 45%, rgba(7,7,12,0.95) 100%), linear-gradient(90deg, rgba(7,7,12,0.7) 0%, transparent 55%); }
-  .banner .info { position: relative; padding: 26px 30px; width: 100%; display: flex; gap: 22px; align-items: flex-end; }
-  .banner .avatar { width: 120px; height: 150px; border-radius: 14px; object-fit: cover; object-position: center top; border: 2px solid var(--gold); box-shadow: 0 12px 32px -8px rgba(0,0,0,0.8), 0 0 24px -6px rgba(232,201,134,0.5); flex-shrink: 0; background: var(--bg2); }
-  .banner .info-txt { min-width: 0; }
-  @media (max-width: 560px) { .banner .info { flex-direction: column; align-items: flex-start; gap: 14px; } .banner .avatar { width: 88px; height: 88px; } }
+  .banner { position: relative; margin-top: 20px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); min-height: 280px; display: flex; align-items: flex-end; }
+  .banner .art { position: absolute; inset: 0; background-size: cover; background-position: center; filter: blur(28px) brightness(0.42) saturate(1.15); transform: scale(1.25); }
+  .banner .portrait { position: absolute; right: 0; top: 0; bottom: 0; width: 48%; max-width: 400px; background-size: cover; background-position: center top;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 52%); mask-image: linear-gradient(90deg, transparent 0%, #000 52%); }
+  .banner .scrim { position: absolute; inset: 0; background:
+    linear-gradient(180deg, rgba(7,7,12,0.15) 0%, rgba(7,7,12,0.45) 55%, rgba(7,7,12,0.92) 100%),
+    linear-gradient(90deg, rgba(7,7,12,0.92) 0%, rgba(7,7,12,0.55) 38%, transparent 62%); }
+  .banner .info { position: relative; padding: 28px 30px; width: 100%; }
+  .banner .info-txt { min-width: 0; max-width: 62%; }
+  @media (max-width: 560px) { .banner .portrait { width: 60%; } .banner .info-txt { max-width: 78%; } }
   .banner h1 { font-family: var(--disp); font-weight: 800; font-size: clamp(34px,6vw,60px); letter-spacing: 2px; line-height: 1; }
   .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
   .tg { font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 999px; background: rgba(20,18,32,0.7); border: 1px solid var(--line); letter-spacing: 0.5px; }
@@ -141,7 +144,7 @@
       const valid=(ids||[]).filter(i=>i&&byId[i]);
       if(!valid.length) return '<div class="cnone">no data</div>';
       return '<div class="clist">'+valid.map(i=>{const h=byId[i];
-        return '<a class="cc" href="./hero.html?id='+i+'&v=4"><img loading="lazy" src="'+h.img+'"/><span>'+esc(h.name)+'</span></a>';}).join('')+'</div>';
+        return '<a class="cc" href="./hero.html?id='+i+'&v=5"><img loading="lazy" src="'+h.img+'"/><span>'+esc(h.name)+'</span></a>';}).join('')+'</div>';
     }
 
     function render(d){
@@ -199,9 +202,10 @@
       const story = d.story? '<section class="blk"><div class="blk-h">Lore</div><p class="story">'+esc(d.story)+'</p></section>' : '';
 
       root.innerHTML =
-        '<div class="banner"><div class="art" style="background-image:url(\''+(d.splash||r.img)+'\')"></div><div class="scrim"></div>' +
-          '<div class="info"><img class="avatar" src="'+(d.splash||r.img)+'" alt="'+esc(name)+'"/>' +
-          '<div class="info-txt"><h1 class="gold-text">'+esc(name)+'</h1><div class="tags">'+cls+lanes+spec+'</div>'+meta+'</div></div></div>' +
+        '<div class="banner"><div class="art" style="background-image:url(\''+(d.splash||r.img)+'\')"></div>' +
+          '<div class="portrait" style="background-image:url(\''+(d.splash||r.img)+'\')"></div>' +
+          '<div class="scrim"></div>' +
+          '<div class="info"><div class="info-txt"><h1 class="gold-text">'+esc(name)+'</h1><div class="tags">'+cls+lanes+spec+'</div>'+meta+'</div></div></div>' +
         stats + skills + ctr + build + story;
     }
 

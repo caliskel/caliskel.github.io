@@ -88,12 +88,15 @@
   #home.view.active { display: flex; }
   #home { width: 100%; min-height: calc(100vh - 66px); align-items: center; padding: 40px 0; position: relative; }
   #home .wrap { position: relative; z-index: 2; }
-  .mascot { position: absolute; right: clamp(8px, 4vw, 70px); top: 50%; width: clamp(210px, 30vw, 400px); height: auto; z-index: 1; pointer-events: none;
+  .mascot-wrap { position: absolute; right: clamp(8px, 4vw, 70px); top: 50%; transform: translateY(-50%); width: clamp(210px, 30vw, 400px); z-index: 1; pointer-events: none; opacity: 0; }
+  .view.active .mascot-wrap { opacity: 1; transition: opacity 1s ease .3s; }
+  .mascot { display: block; width: 100%; height: auto;
     filter: drop-shadow(0 0 9px rgba(0,229,255,0.55)) drop-shadow(0 0 26px rgba(0,229,255,0.32));
-    animation: mascotFloat 6.5s ease-in-out infinite; opacity: 0; }
-  .view.active .mascot { opacity: 0.97; transition: opacity 1s ease .3s; }
-  @keyframes mascotFloat { 0%,100% { transform: translateY(-53%); } 50% { transform: translateY(-46%); } }
-  @media (max-width: 1200px) { .mascot { display: none; } }
+    animation: mascotFloat 6.5s ease-in-out infinite; }
+  @keyframes mascotFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+  .mascot-tag { position: absolute; top: -4%; right: 58%; font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.3px; color: var(--cyan); text-shadow: 0 0 8px rgba(0,229,255,0.55); white-space: nowrap; transform: rotate(-5deg); }
+  .mascot-tag .arr { font-size: 19px; display: inline-block; transform: translateY(3px); }
+  @media (max-width: 1200px) { .mascot-wrap { display: none; } }
   .kicker { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 13px; letter-spacing: 1px; color: rgba(125,211,252,0.8); margin-bottom: 26px; flex-wrap: wrap; }
   .kicker .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); animation: blink 1.6s infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
@@ -263,7 +266,10 @@
         </div>
         <div class="home-foot">© <span id="year"></span> caliskel — vibe developer ✦ made with care</div>
       </div>
-      <img class="mascot" src="./assets/mascot.png?v=1" alt="caliskel mascot" />
+      <div class="mascot-wrap">
+        <span class="mascot-tag"><span class="i18n" data-en="drawn by me">это мой рисунок</span> <span class="arr">↘</span></span>
+        <img class="mascot" src="./assets/mascot.png?v=1" alt="caliskel mascot — drawn by caliskel" />
+      </div>
     </header>
 
     <!-- SERVICES -->
@@ -274,13 +280,13 @@
             <span class="secnum">01</span>
             <div class="eyebrow"><b>//</b> <span class="i18n" data-en="what I do">что я делаю</span></div>
             <h2 class="i18n" data-en="What I build">Что я собираю</h2>
-            <p class="i18n" data-en="I take on work where speed and outcome matter — and this is just a slice, I'm not limited to this list. Prices are a starting point — final scope is discussed per project.">Беру задачи, где важна скорость и результат — и это лишь часть, я не ограничиваюсь этим списком. Цены — ориентир для старта, обсуждаются под проект.</p>
+            <p class="i18n" data-en="I take on work where speed and outcome matter — and this is just a slice, I'm not limited to this list. Scope, timeline and pricing are discussed per project.">Беру задачи, где важна скорость и результат — и это лишь часть, я не ограничиваюсь этим списком. Объём, сроки и стоимость обсуждаются под каждый проект.</p>
           </div>
           <div class="grid grid-3">
-            <div class="card svc rv"><h3 class="i18n" data-en="Startup MVP">MVP для стартапа</h3><p class="i18n" data-en="A working prototype to validate your idea and show investors or first customers.">Рабочий прототип, чтобы проверить идею и показать инвесторам или первым клиентам.</p><div class="price">от $300</div></div>
-            <div class="card svc rv"><h3 class="i18n" data-en="Landing pages &amp; sites">Лендинги и сайты</h3><p class="i18n" data-en="Fast, beautiful, responsive pages with forms, animation and turn-key deployment.">Быстрые, красивые и адаптивные страницы с формами, анимацией и деплоем под ключ.</p><div class="price">от $120</div></div>
-            <div class="card svc rv"><h3 class="i18n" data-en="Bots &amp; automation">Боты и автоматизации</h3><p class="i18n" data-en="Telegram bots, integrations, data processing and routine work on autopilot.">Telegram-боты, интеграции, обработка данных и рутинные процессы на автопилоте.</p><div class="price">от $150</div></div>
-            <div class="card svc rv"><h3 class="i18n" data-en="Illustration &amp; art">Иллюстрация и арт</h3><p class="i18n" data-en="Character art, illustrations and key visuals — hand-drawn, in your style. Hero art for a game, brand or personal commission.">Персонажный арт, иллюстрации и ключевые визуалы — рисую вручную, под твой стиль. Арт для игры, бренда или личный заказ.</p><div class="price">от $80</div></div>
+            <div class="card svc rv"><h3 class="i18n" data-en="Startup MVP">MVP для стартапа</h3><p class="i18n" data-en="A working prototype to validate your idea and show investors or first customers.">Рабочий прототип, чтобы проверить идею и показать инвесторам или первым клиентам.</p></div>
+            <div class="card svc rv"><h3 class="i18n" data-en="Landing pages &amp; sites">Лендинги и сайты</h3><p class="i18n" data-en="Fast, beautiful, responsive pages with forms, animation and turn-key deployment.">Быстрые, красивые и адаптивные страницы с формами, анимацией и деплоем под ключ.</p></div>
+            <div class="card svc rv"><h3 class="i18n" data-en="Bots &amp; automation">Боты и автоматизации</h3><p class="i18n" data-en="Telegram bots, integrations, data processing and routine work on autopilot.">Telegram-боты, интеграции, обработка данных и рутинные процессы на автопилоте.</p></div>
+            <div class="card svc rv"><h3 class="i18n" data-en="Illustration &amp; art">Иллюстрация и арт</h3><p class="i18n" data-en="Character art, illustrations and key visuals — hand-drawn, in your style. Hero art for a game, brand or personal commission.">Персонажный арт, иллюстрации и ключевые визуалы — рисую вручную, под твой стиль. Арт для игры, бренда или личный заказ.</p></div>
           </div>
         </div>
       </div>

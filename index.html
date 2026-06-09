@@ -412,6 +412,7 @@
           <div class="contact-links">
             <a href="https://t.me/caliskel" class="btn btn-cyan" target="_blank" rel="noopener">▶ Telegram</a>
             <a href="https://x.com/CallistoKeleran" class="btn btn-ghost" target="_blank" rel="noopener">X (Twitter)</a>
+            <button type="button" class="btn btn-ghost" data-copy="caliskel" data-label="Discord: caliskel">Discord: caliskel</button>
           </div>
         </div>
       </div>
@@ -566,6 +567,16 @@
     if (hashId && document.getElementById(hashId) && hashId !== "home") swapNow(hashId); else animateHero();
   </script>
   <div class="alb" id="artLb"><button class="x" aria-label="Close">×</button><img alt="" /></div>
+  <script>
+    /* copy-to-clipboard buttons (e.g. Discord handle) */
+    document.addEventListener('click', function(e){
+      var b = e.target.closest('[data-copy]'); if(!b) return;
+      var txt = b.getAttribute('data-copy'), label = b.getAttribute('data-label') || b.textContent;
+      if(navigator.clipboard) navigator.clipboard.writeText(txt).catch(function(){});
+      b.textContent = '✓ copied'; clearTimeout(b._t);
+      b._t = setTimeout(function(){ b.textContent = label; }, 1500);
+    });
+  </script>
   <script>
     (function(){
       var lb=document.getElementById('artLb'), img=lb.querySelector('img');

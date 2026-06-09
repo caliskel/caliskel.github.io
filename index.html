@@ -86,7 +86,14 @@
 
   /* HERO (home view) */
   #home.view.active { display: flex; }
-  #home { width: 100%; min-height: calc(100vh - 66px); align-items: center; padding: 40px 0; }
+  #home { width: 100%; min-height: calc(100vh - 66px); align-items: center; padding: 40px 0; position: relative; }
+  #home .wrap { position: relative; z-index: 2; }
+  .mascot { position: absolute; right: clamp(8px, 4vw, 70px); top: 50%; width: clamp(210px, 30vw, 400px); height: auto; z-index: 1; pointer-events: none;
+    filter: drop-shadow(0 0 9px rgba(0,229,255,0.55)) drop-shadow(0 0 26px rgba(0,229,255,0.32));
+    animation: mascotFloat 6.5s ease-in-out infinite; opacity: 0; }
+  .view.active .mascot { opacity: 0.97; transition: opacity 1s ease .3s; }
+  @keyframes mascotFloat { 0%,100% { transform: translateY(-53%); } 50% { transform: translateY(-46%); } }
+  @media (max-width: 1200px) { .mascot { display: none; } }
   .kicker { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 13px; letter-spacing: 1px; color: rgba(125,211,252,0.8); margin-bottom: 26px; flex-wrap: wrap; }
   .kicker .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); animation: blink 1.6s infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
@@ -256,6 +263,7 @@
         </div>
         <div class="home-foot">© <span id="year"></span> caliskel — vibe developer ✦ made with care</div>
       </div>
+      <img class="mascot" src="./assets/mascot.png?v=1" alt="caliskel mascot" />
     </header>
 
     <!-- SERVICES -->

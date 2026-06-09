@@ -123,7 +123,7 @@
 
   /* CARDS */
   .grid { display: grid; gap: 16px; }
-  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(232px, 1fr)); }
   @media (max-width: 860px) { .grid-3 { grid-template-columns: 1fr; } }
   .card { background: var(--panel); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
     padding: 30px; transition: border-color .22s, background .22s, box-shadow .22s, transform .22s; position: relative; overflow: hidden; }
@@ -197,6 +197,28 @@
     .ch { opacity: 1 !important; transform: none !important; }
     #app { transition: none !important; }
   }
+  /* ART GALLERY (about) */
+  .art { margin-top: 46px; }
+  .art-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-bottom: 20px; }
+  .art-head h3 { font-family: var(--font-display); font-weight: 700; font-size: clamp(22px, 3vw, 30px); letter-spacing: -0.5px; color: #fff; }
+  .art-head h3 em { font-style: normal; color: var(--cyan); }
+  .art-head p { color: var(--muted); font-size: 15px; margin-top: 8px; max-width: 460px; }
+  .art-cta { font-family: var(--font-display); font-weight: 600; font-size: 14px; color: var(--cyan); border: 1px solid rgba(0,229,255,0.45); background: rgba(0,229,255,0.08); border-radius: 8px; padding: 11px 20px; white-space: nowrap; transition: border-color .2s, box-shadow .2s; }
+  .art-cta:hover { border-color: var(--cyan); box-shadow: 0 0 20px -4px rgba(0,229,255,0.5); }
+  .art-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 760px) { .art-grid { grid-template-columns: repeat(2, 1fr); } }
+  .art-item { position: relative; aspect-ratio: 3/4; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); cursor: zoom-in; background: var(--panel); }
+  .art-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.2,.7,.2,1); display: block; }
+  .art-item:hover img { transform: scale(1.06); }
+  .art-item::after { content: ""; position: absolute; inset: 0; border-radius: 12px; box-shadow: inset 0 0 0 1px transparent; transition: box-shadow .2s; }
+  .art-item:hover::after { box-shadow: inset 0 0 0 1px rgba(0,229,255,0.5); }
+
+  /* art lightbox */
+  .alb { position: fixed; inset: 0; z-index: 1000; background: rgba(5,7,14,0.94); backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center; padding: 30px; cursor: zoom-out; }
+  .alb.open { display: flex; }
+  .alb img { max-width: 94vw; max-height: 90vh; border-radius: 12px; border: 1px solid rgba(0,229,255,0.25); box-shadow: 0 30px 90px -20px rgba(0,0,0,0.9); }
+  .alb .x { position: absolute; top: 20px; right: 24px; width: 42px; height: 42px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.15); background: rgba(20,25,43,0.6); color: #fff; font-size: 22px; cursor: pointer; display: grid; place-items: center; }
+  .alb .x:hover { border-color: var(--cyan); color: var(--cyan); }
 </style>
 </head>
 <body>
@@ -250,6 +272,7 @@
             <div class="card svc rv"><h3 class="i18n" data-en="Startup MVP">MVP для стартапа</h3><p class="i18n" data-en="A working prototype to validate your idea and show investors or first customers.">Рабочий прототип, чтобы проверить идею и показать инвесторам или первым клиентам.</p><div class="price">от $300</div></div>
             <div class="card svc rv"><h3 class="i18n" data-en="Landing pages &amp; sites">Лендинги и сайты</h3><p class="i18n" data-en="Fast, beautiful, responsive pages with forms, animation and turn-key deployment.">Быстрые, красивые и адаптивные страницы с формами, анимацией и деплоем под ключ.</p><div class="price">от $120</div></div>
             <div class="card svc rv"><h3 class="i18n" data-en="Bots &amp; automation">Боты и автоматизации</h3><p class="i18n" data-en="Telegram bots, integrations, data processing and routine work on autopilot.">Telegram-боты, интеграции, обработка данных и рутинные процессы на автопилоте.</p><div class="price">от $150</div></div>
+            <div class="card svc rv"><h3 class="i18n" data-en="Illustration &amp; art">Иллюстрация и арт</h3><p class="i18n" data-en="Character art, illustrations and key visuals — hand-drawn, in your style. Hero art for a game, brand or personal commission.">Персонажный арт, иллюстрации и ключевые визуалы — рисую вручную, под твой стиль. Арт для игры, бренда или личный заказ.</p><div class="price">от $80</div></div>
           </div>
         </div>
       </div>
@@ -326,6 +349,21 @@
               <div class="step"><div class="n">01</div><div><h4 class="i18n" data-en="Discuss">Обсуждаем</h4><p class="i18n" data-en="Tell me the task — I'll say honestly what's realistic and what it costs.">Расскажи задачу — отвечу честно, что реально и за сколько.</p></div></div>
               <div class="step"><div class="n">02</div><div><h4 class="i18n" data-en="Build">Собираю</h4><p class="i18n" data-en="I build fast, show progress, and iterate until it's right.">Делаю быстро, показываю прогресс и правлю до результата.</p></div></div>
               <div class="step"><div class="n">03</div><div><h4 class="i18n" data-en="Ship">Отгружаю</h4><p class="i18n" data-en="I deploy and hand you a working link. Support after delivery.">Деплою и отдаю рабочую ссылку. Поддержка после сдачи.</p></div></div>
+            </div>
+          </div>
+
+          <div class="art">
+            <div class="art-head">
+              <div>
+                <h3 class="i18n" data-en="I also &lt;em&gt;draw&lt;/em&gt;">Я ещё и <em>рисую</em></h3>
+                <p class="i18n" data-en="Character art and illustration — available for commissions. Tap a piece to view it full size.">Персонажный арт и иллюстрация — беру заказы. Нажми на работу, чтобы открыть в полном размере.</p>
+              </div>
+              <a href="#contact" data-view="contact" class="art-cta i18n" data-en="Commission art">Заказать арт</a>
+            </div>
+            <div class="art-grid">
+              <div class="art-item" data-full="./assets/art/1.jpg?v=1"><img loading="lazy" src="./assets/art/1.jpg?v=1" alt="Illustration by caliskel" /></div>
+              <div class="art-item" data-full="./assets/art/2.jpg?v=1"><img loading="lazy" src="./assets/art/2.jpg?v=1" alt="Illustration by caliskel" /></div>
+              <div class="art-item" data-full="./assets/art/3.jpg?v=1"><img loading="lazy" src="./assets/art/3.jpg?v=1" alt="Illustration by caliskel" /></div>
             </div>
           </div>
         </div>
@@ -517,6 +555,19 @@
     document.getElementById("langToggle").addEventListener("click", () => { lang = lang === "en" ? "ru" : "en"; applyLang(lang); });
     const hashId = (location.hash || "").replace("#", "");
     if (hashId && document.getElementById(hashId) && hashId !== "home") swapNow(hashId); else animateHero();
+  </script>
+  <div class="alb" id="artLb"><button class="x" aria-label="Close">×</button><img alt="" /></div>
+  <script>
+    (function(){
+      var lb=document.getElementById('artLb'), img=lb.querySelector('img');
+      function close(){ lb.classList.remove('open'); img.src=''; document.body.style.overflow=''; }
+      document.addEventListener('click', function(e){
+        var it=e.target.closest('.art-item');
+        if(it && it.dataset.full){ img.src=it.dataset.full; lb.classList.add('open'); document.body.style.overflow='hidden'; return; }
+        if(e.target.closest('#artLb')) close();
+      });
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+    })();
   </script>
 </body>
 </html>

@@ -467,12 +467,7 @@
       });
     });
 
-    /* ---------- custom cursor ---------- */
-    if (finePointer && !reduceMotion) {
-      document.body.classList.add("cursor-on");
-      const dot = document.querySelector(".cur-dot");
-      addEventListener("mousemove", (e) => { dot.style.transform = "translate(" + (e.clientX - 4.5) + "px," + (e.clientY - 4.5) + "px)"; dot.style.opacity = 1; });
-    }
+    /* ---------- custom cursor: disabled — using the normal system cursor ---------- */
 
     /* ---------- i18n ---------- */
     const ruMap = new Map();
